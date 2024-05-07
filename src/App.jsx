@@ -8,6 +8,9 @@ import { useState } from "react";
 
 export default function App() {
   const [collections, setCollections] = useState([])
+  const [categorys, setCategorys] = useState([])
+  const [activeCategorys, setActiveCategorys] = useState(0)
+
 
   useEffect(() => {
     fetch('https://afbf733ef0b7e113.mokky.dev/photos_collections')
@@ -19,17 +22,26 @@ export default function App() {
     })
     .catch((err) => console.log(err)) 
   }, [])
+
+  useEffect(() => {
+    fetch('https://afbf733ef0b7e113.mokky.dev/categorys')
+    .then((response) => response.json())
+    .then((data) => {
+      if(data.length > 0) {
+        setCategorys(data)
+      }
+    })
+    .catch((err) => console.log(err)) 
+  }, [])
  
   return (
     <>
       <h1 className={styles.title}>Моя колекция фотографий</h1>
       <div className={styles.block_header}>
-        <Tegs />
+        <Tegs categorys={categorys} activeCategorys={activeCategorys} setActiveCategorys={setActiveCategorys}/>
         <Search />
       </div>
-
-      <Cards collections={collections}/>
-
+      <Cards collections={collections} activeCategorys={activeCategorys}/>
       <Pagination />
     </>
   );

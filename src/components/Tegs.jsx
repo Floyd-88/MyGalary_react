@@ -1,14 +1,14 @@
 import styles from "../css/tegs.module.css";
 
-export default function Tegs() {
+export default function Tegs({ categorys, activeCategorys, setActiveCategorys }) {
   return (
     <>
       <ul className={styles.block_tegs}>
-        <li className={`${styles.tegs} ${styles.active}`}>Все</li>
-        <li className={styles.tegs}>Горы</li>
-        <li className={styles.tegs}>Море</li>
-        <li className={styles.tegs}>Архитектура</li>
-        <li className={styles.tegs}>Города</li>
+        {categorys.map((cat, index) => (
+          <li onClick={() => setActiveCategorys(cat.category)} key={index} className={`${styles.tegs} ${cat.category == activeCategorys ? styles.active : ''}`}>
+            {cat.name}
+          </li>
+        ))}
       </ul>
     </>
   );
