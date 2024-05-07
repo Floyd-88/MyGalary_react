@@ -1,7 +1,32 @@
 .block_pagination {
-
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  margin-top: 20px;
 }
 
 .pagination {
-    
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 17px;
+  border: 1px solid rgb(170, 168, 168);
+  background-color: white;
+  -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+  -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+  box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+}
+
+.pagination:hover {
+  transform: scale(1.1);
+}
+
+.active {
+  background-color: black;
+  color: white;
 }

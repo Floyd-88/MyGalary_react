@@ -7,6 +7,11 @@ export default function Cards() {
     <>
       <div className={styles.block_cards}>
         <Card/>
+        <Card/>
+        <Card/>
+        <Card/>
+        <Card/>
+
       </div>
     </>
   );

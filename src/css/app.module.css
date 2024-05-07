@@ -1,9 +1,9 @@
-
-
 .title {
-
 }
 
 .block_header {
-    
+  display: flex;
+  gap: 30px;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }

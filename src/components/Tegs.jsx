@@ -4,7 +4,7 @@ export default function Tegs() {
   return (
     <>
       <ul className={styles.block_tegs}>
-        <li className={styles.tegs}>Все</li>
+        <li className={`${styles.tegs} ${styles.active}`}>Все</li>
         <li className={styles.tegs}>Горы</li>
         <li className={styles.tegs}>Море</li>
         <li className={styles.tegs}>Архитектура</li>
