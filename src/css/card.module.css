@@ -16,10 +16,12 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  width: 100%;
+  height: 100%;
 }
 .items_photo .item_photo:first-child {
   width: 100%;
-  height: 100%;
+  height: 200px;
 }
 
 .item_photo {
@@ -35,7 +37,4 @@
 
 .title {
     font-weight: 600;
-}
-
-.title p {
 }
