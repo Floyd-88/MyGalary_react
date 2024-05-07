@@ -5,7 +5,7 @@ export default function Tegs({ categorys, activeCategorys, setActiveCategorys })
     <>
       <ul className={styles.block_tegs}>
         {categorys.map((cat, index) => (
-          <li onClick={() => setActiveCategorys(cat.category)} key={index} className={`${styles.tegs} ${cat.category == activeCategorys ? styles.active : ''}`}>
+          <li onClick={() => setActiveCategorys(Number(cat.category))} key={index} className={`${styles.tegs} ${cat.category == activeCategorys ? styles.active : ''}`}>
             {cat.name}
           </li>
         ))}

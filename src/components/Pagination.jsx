@@ -1,15 +1,13 @@
 import styles from "../css/pagination.module.css";
 
-export default function Pagination() {
+export default function Pagination({page, setPageCount}) {
 
   return (
     <>
       <ul className={styles.block_pagination}>
-        <li className={`${styles.pagination} ${styles.active}`}>1</li>
-        <li className={styles.pagination}>2</li>
-        <li className={styles.pagination}>3</li>
-        <li className={styles.pagination}>4</li>
-        <li className={styles.pagination}>5</li>
+        {[...Array(page.total_pages)].map((_, index) => (
+        <li onClick={() => setPageCount(index+1)} key={index+1} className={`${styles.pagination} ${page.current_page === index+1 ? styles.active : ''}`}>{index+1}</li>
+        ))}
       </ul>
     </>
   );

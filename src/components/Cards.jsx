@@ -1,12 +1,14 @@
 import Card from "./Card";
 import styles from "../css/cards.module.css";
 
-export default function Cards({collections, activeCategorys}) {
-
+export default function Cards({collections, searchCollections}) {
   return (
     <>
       <div className={styles.block_cards}>
-        {collections.filter((collection) => collection.category == activeCategorys || activeCategorys == 0).map((collection, index) => (
+        {collections.filter((collection) =>
+      collection.name
+        .toLocaleLowerCase()
+        .includes(searchCollections.toLocaleLowerCase())).map((collection, index) => (
         <Card key={index} collection={collection}/>
         ))}
 
