@@ -18,23 +18,22 @@ export default function App() {
   useEffect(() => {
     setIsLoader(true);
     fetch(
-      `https://afbf733ef0b7e113.mokky.dev/photos_collections?page=${pageCount}&limit=4`
+      `https://afbf733ef0b7e113.mokky.dev/photos_collections?page=${pageCount}&limit=4&category=${
+        +activeCategorys !== 0 ? activeCategorys : "*"
+      }&name=*${searchCollections}*`
     )
       .then((response) => response.json())
       .then((data) => {
+        setPage(data.meta);
         if (data.items.length > 0) {
-          const collections = data.items.filter(
-            (collection) =>
-              Number(collection.category) === activeCategorys ||
-              activeCategorys === 0
-          );
-          setCollections(collections);
-          setPage(data.meta);
+          setCollections(data.items);
+        } else {
+          setCollections([]);
         }
       })
       .catch((err) => console.log(err))
       .finally(() => setIsLoader(false));
-  }, [activeCategorys, pageCount]);
+  }, [activeCategorys, pageCount, searchCollections]);
 
   useEffect(() => {
     fetch("https://afbf733ef0b7e113.mokky.dev/categorys")
@@ -46,19 +45,20 @@ export default function App() {
       })
       .catch((err) => console.log(err));
   }, []);
-
   return (
     <>
-      <h1 className={styles.title}>Моя колекция фотографий</h1>
+      <h1 className={styles.title}>Photo gallery</h1>
       <div className={styles.block_header}>
         <Tegs
           categorys={categorys}
           activeCategorys={activeCategorys}
           setActiveCategorys={setActiveCategorys}
+          setPageCount={setPageCount}
         />
         <Search
           searchCollections={searchCollections}
           setSearchCollections={setSearchCollections}
+          setPageCount={setPageCount}
         />
       </div>
       {!isLoader ? (
@@ -71,9 +71,8 @@ export default function App() {
         <p className={styles.is_loader}>Идет загрузка...</p>
       )}
 
-      {!isLoader ? (
-        <Pagination page={page} setPageCount={setPageCount} />
-      ) : ""}
+       <Pagination page={page} setPageCount={setPageCount} className={!isLoader && styles.display_none}/>
+      <p className={`${styles.is_loader} ${!(collections.length === 0 && !isLoader) ? styles.display_none : ''}`}>Ничего не найдено</p>
     </>
   );
 }
