@@ -1,19 +1,4 @@
-.title {
-}
-
-.block_header {
-  display: flex;
-  gap: 30px;
-  margin-top: 10px;
-  margin-bottom: 20px;
-}
-
-.is_loader {
-  margin: 40px;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.display_none {
-  display: none;
+.container {
+  margin-top: 130px;
+  padding: 30px;
 }

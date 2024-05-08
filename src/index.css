@@ -4,6 +4,12 @@
 body {
   display: flex;
   background-color: whitesmoke;
-  padding: 20px;
   font-family: 'Montserrat';
+}
+
+#root {
+  width: 100%;
+}
+.active {
+  color: gold;
 }

@@ -1,0 +1,44 @@
+.header {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  /* height: 100px; */
+  border: 1px solid black;
+  background-color: black;
+  z-index: 100;
+}
+
+.block_nav_items {
+  width: 100%;
+  padding: 15px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+a {
+  text-decoration: none;
+  font-weight: 600;
+  color: white;
+  border-bottom: none;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.5),
+    0 0 10px rgba(255, 255, 255, 0.5);
+}
+a:after {
+  display: block; /*превращаем его в блочный элемент*/
+  content: ""; /*контента в данном блоке не будет поэтому в кавычках ничего не ставим*/
+  height: 3px; /*задаём высоту линии*/
+  width: 0%; /*задаём начальную ширину элемента (линии)*/
+  background-color: #ffffff; /*цвет фона элемента*/
+  transition: width 0.4s ease-in-out; /*данное свойство отвечает за плавное изменение ширины. Здесь можно задать время анимации в секундах (в данном случае задано 0.4 секунды)*/
+}
+
+a:hover:after {
+  width: 100%;
+}
+
+svg {
+  width: 70px;
+  height: 70px;
+}

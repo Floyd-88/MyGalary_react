@@ -1,0 +1,21 @@
+.container {
+  margin-top: 130px;
+  padding: 30px;
+}
+
+.block_header {
+    display: flex;
+    gap: 30px;
+    margin-top: 10px;
+    margin-bottom: 40px;
+  }
+
+  .is_loader {
+    margin: 40px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .display_none {
+    display: none;
+  }
