@@ -11,10 +11,12 @@ export default function App() {
   const [categorys, setCategorys] = useState([]);
   const [activeCategorys, setActiveCategorys] = useState(0);
   const [searchCollections, setSearchCollections] = useState("");
-  const [page, setPage] = useState({})
-  const [pageCount, setPageCount] = useState(1)
+  const [page, setPage] = useState({});
+  const [pageCount, setPageCount] = useState(1);
+  const [isLoader, setIsLoader] = useState(false);
 
   useEffect(() => {
+    setIsLoader(true);
     fetch(
       `https://afbf733ef0b7e113.mokky.dev/photos_collections?page=${pageCount}&limit=4`
     )
@@ -27,10 +29,11 @@ export default function App() {
               activeCategorys === 0
           );
           setCollections(collections);
-          setPage(data.meta)
+          setPage(data.meta);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoader(false));
   }, [activeCategorys, pageCount]);
 
   useEffect(() => {
@@ -43,16 +46,6 @@ export default function App() {
       })
       .catch((err) => console.log(err));
   }, []);
-
-  // useEffect(() => {
-  //   let newCollections = [...collections]
-  //   newCollections = newCollections.filter((collection) =>
-  //     collection.name
-  //       .toLocaleLowerCase()
-  //       .includes(searchCollections.toLocaleLowerCase())
-  //   );
-  //   setCollections(newCollections);
-  // }, [searchCollections]);
 
   return (
     <>
@@ -68,12 +61,19 @@ export default function App() {
           setSearchCollections={setSearchCollections}
         />
       </div>
-      <Cards
-        collections={collections}
-        activeCategorys={activeCategorys}
-        searchCollections={searchCollections}
-      />
-      <Pagination page={page} setPageCount={setPageCount}/>
+      {!isLoader ? (
+        <Cards
+          collections={collections}
+          activeCategorys={activeCategorys}
+          searchCollections={searchCollections}
+        />
+      ) : (
+        <p className={styles.is_loader}>Идет загрузка...</p>
+      )}
+
+      {!isLoader ? (
+        <Pagination page={page} setPageCount={setPageCount} />
+      ) : ""}
     </>
   );
 }
