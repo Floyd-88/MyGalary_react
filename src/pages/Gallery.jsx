@@ -5,6 +5,7 @@ import Search from "../components/Search";
 import Tegs from "../components/Tegs";
 import styles from "../css/gallery.module.css";
 import { useState } from "react";
+import Paralax from "../components/Paralax";
 
 export default function Gallery() {
   const [collections, setCollections] = useState([]);
@@ -15,10 +16,11 @@ export default function Gallery() {
   const [pageCount, setPageCount] = useState(1);
   const [isLoader, setIsLoader] = useState(false);
 
+
   useEffect(() => {
     setIsLoader(true);
     fetch(
-      `https://afbf733ef0b7e113.mokky.dev/photos_collections?page=${pageCount}&limit=4&category=${
+      `https://afbf733ef0b7e113.mokky.dev/photos_collections?page=${pageCount}&limit=8&category=${
         +activeCategorys !== 0 ? activeCategorys : "*"
       }&name=*${searchCollections}*`
     )
@@ -47,6 +49,7 @@ export default function Gallery() {
   }, []);
   return (
     <>
+    <Paralax  text_2={'GALLERY'} text_btn={"Home"} fone={"./paralax_1.jpg"} to={"/"}/>
       <div className={styles.container}>
         <div className={styles.block_header}>
           <Tegs

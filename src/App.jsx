@@ -1,4 +1,4 @@
-import styles from "./css/app.module.css";
+// import styles from "./css/app.module.css";
 
 import Header from "./components/Header";
 // import Gallery from "./pages/Gallery";

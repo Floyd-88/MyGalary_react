@@ -1,6 +1,6 @@
 .block_cards {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 53px;
     justify-content: center;
 }
