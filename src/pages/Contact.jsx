@@ -1,9 +1,12 @@
 // import styles from "../css/contact.module.css";
 
+import Paralax from "../components/Paralax";
+
 export default function Contact() {
   return (
   <>
-  <h1>Мои контакты</h1>
+    <Paralax  text_2={'CONTACT'} text_btn={"Gallery"} fone={"./paralax_1.jpg"} to={"/gallery"}/>
+
   </>
   )
 }

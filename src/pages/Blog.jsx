@@ -1,9 +1,12 @@
 // import styles from "../css/blog.module.css";
 
+import Paralax from "../components/Paralax";
+
 export default function Blog() {
   return (
   <>
-  <h1>Блог</h1>
+    <Paralax  text_2={'BLOG'} text_btn={"Gallery"} fone={"./paralax_1.jpg"} to={"/gallery"}/>
+
   </>
   )
 }

@@ -1,0 +1,19 @@
+.btn_next_gal {
+    margin-top: 20px;
+    padding: 0 40px;
+    height: 50px;
+    font-size: 25px;
+    font-weight: 600;
+    font-family: fangsong, Courier, monospace;
+    cursor: pointer;
+    background-color: rgb(89, 243, 171);
+    border: none;
+    -webkit-box-shadow: 0px 5px 10px 5px rgba(34, 60, 80, 0.17);
+    -moz-box-shadow: 0px 5px 10px 5px rgba(34, 60, 80, 0.17);
+    box-shadow: 0px 5px 10px 5px rgba(34, 60, 80, 0.17);
+  }
+  
+  .btn_next_gal:hover {
+    transform: scale(1.1);
+    background-color: rgb(63, 166, 118);
+  }
