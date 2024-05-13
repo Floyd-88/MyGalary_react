@@ -89,7 +89,7 @@
 
 .wrapper_text_3 {
   opacity: 0;
-  animation: ani_show 1s forwards;
+  animation: ani_show .5s forwards;
   animation-delay: .4s;
 }
 

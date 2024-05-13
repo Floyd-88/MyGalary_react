@@ -1,0 +1,116 @@
+.wrapper_card {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 60px;
+  margin-bottom: 10px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  min-height: 100%;
+  background-color: white;
+  border-radius: 10px;
+  -webkit-box-shadow: 2px 3px 6px 2px rgba(34, 60, 80, 0.41);
+  -moz-box-shadow: 2px 3px 6px 2px rgba(34, 60, 80, 0.41);
+  box-shadow: 2px 3px 6px 2px rgba(34, 60, 80, 0.41);
+
+  color: rgb(131, 128, 128);
+  opacity: 0;
+}
+
+.photo {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+
+  width: 100%;
+  height: 45%;
+  flex-shrink: 0;
+}
+
+.wrapper_title {
+  padding: 40px 20px;
+  flex: 1 0 auto;
+  padding: 40px 20px;
+  flex: 1 0 auto;
+  overflow-y: auto;
+  height: 45%;
+  padding-bottom: 10px;
+}
+
+.title {
+  margin-bottom: 20px;
+}
+
+.desc {
+}
+
+.card_info {
+  display: flex;
+  flex: 0 0 auto;
+  padding: 20px 20px;
+  border-top: 1px solid rgb(209, 208, 208);
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wrapper_name {
+  display: flex;
+  align-items: center;
+}
+
+.wrapper_name .name:last-child {
+  margin-right: 0;
+}
+
+.wrapper_name svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.name {
+  margin-right: 5px;
+}
+
+.wrapper_data {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wrapper_data svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.data {
+}
+
+.observe {
+  display: block;
+  width: 100px;
+  margin: 0 auto;
+}
+
+@keyframes fadeIn {
+  0% {
+    transform: translateY(20%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.fadeIn {
+  /* transform: translateY(20%); */
+  animation: fadeIn .6s forwards;
+  opacity: 0;
+}
