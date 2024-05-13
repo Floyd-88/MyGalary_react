@@ -90,13 +90,13 @@
 .wrapper_text_3 {
   opacity: 0;
   animation: ani_show 1s forwards;
-  animation-delay: .5s;
+  animation-delay: .4s;
 }
 
 .wrapper_button {
   opacity: 0;
   animation: ani_button 1s forwards;
-  animation-delay: 1s;
+  animation-delay: .8s;
 
 } 
 
