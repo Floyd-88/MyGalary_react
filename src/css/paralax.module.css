@@ -66,7 +66,6 @@
 
 .btn_next_gal:hover {
   transform: scale(1.1);
-  background-color: rgb(199, 175, 40);
 }
 
 @media only screen and (max-device-width: 1366px) {
