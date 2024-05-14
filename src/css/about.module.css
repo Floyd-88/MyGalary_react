@@ -1,0 +1,33 @@
+.wrapper_block {
+  display: flex;
+  flex-direction: row;
+  padding: 50px 100px;
+  gap: 40px;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrapper_photo {
+  padding-right: 40px;
+  flex-shrink: 0;
+}
+
+.wrapper_photo img {
+  width: 400px;
+  height: auto;
+}
+
+.wrapper_info {
+    color: rgb(82, 81, 81);
+    width: 50%;
+}
+
+.title {
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.info {
+    font-size: 20px;
+    line-height: 32px;
+}
