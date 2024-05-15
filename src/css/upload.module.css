@@ -7,7 +7,7 @@
 }
 
 .btn_next_gal {
-  margin-right: 20px;
+  /* margin-right: 20px; */
   padding: 0 40px;
   height: 50px;
   font-size: 20px;
@@ -23,6 +23,20 @@
   );
 }
 
+.wrapper_btn_next_gal {
+  display: flex;
+  justify-content: center;
+
+}    
+
+.btn_next_gal_shadow {
+  margin-bottom: 40px;
+  margin-top: 20px;
+  -webkit-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.6);
+  -moz-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.6);
+  box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.6);
+}
+
 .btn_next_gal:hover {
   transform: scale(1.1);
   background-color: rgb(63, 166, 118);
@@ -35,6 +49,7 @@
 .select_cat_photo {
   display: flex;
   margin-right: 20px;
+  margin-left: 20px;
 }
 
 .select_cat_photo_sel {
@@ -67,4 +82,95 @@
 
 .btn_load_photo button:hover {
   transform: scale(1.1);
+}
+
+.wrapper_load_photo {
+  display: none;
+}
+
+.wrapper_preview_photos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 60px;
+  margin-bottom: 10px;
+}
+
+.preview_image {
+  position: relative;
+  margin-bottom: .5rem;
+  margin-right: .5rem;
+  overflow: hidden;
+
+  -webkit-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.6);
+  -moz-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.6);
+  box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.6);
+}
+
+.preview_remove {
+  opacity: 0;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-weight: bold;
+  background: rgba(255, 255, 255, .5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity .22s;
+}
+
+.preview_image:hover .preview_remove {
+  opacity: 1;
+}
+
+.preview_photo {
+  width: 100%;
+  height: auto;
+}
+
+.preview_info {
+  position: absolute;
+  right: 0;
+  bottom: -30px;
+  left: 0;
+  height: 34px;
+  font-size: .8rem;
+  background: rgba(255, 255, 255, .5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px;
+  transition: bottom .22s;
+}
+
+.preview_info_name {
+  width:  100%;
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.preview_image:hover .preview_info {
+  bottom: 4px;
+}
+
+.active_load {
+  bottom: 4px;
+}
+
+.preview_info_progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: #42b983;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width .22s;
 }
