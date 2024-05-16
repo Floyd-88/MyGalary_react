@@ -16,7 +16,7 @@ export default function Upload() {
   const [isSelect, setIsSelect] = useState(false);
   const [selectCat, setSelectCat] = useState("");
   const [files, setFiles] = useState([]);
-  // const [progressLoadPhoto, setProgressLoadPhoto] = useState(0);
+  const [btnDisabled, setBtnDisabled] = useState(false)
 
   const photos = useRef(null);
   const addBtn = useRef(null);
@@ -32,6 +32,8 @@ export default function Upload() {
     // if (photos.current) {
     //   photos.current = null;
     // }
+    setFiles([])
+    setBtnDisabled(false)
 
     //при клике на кнопку срабатывает инпут
     photos.current.click();
@@ -70,13 +72,12 @@ export default function Upload() {
         const reader = new FileReader();
         reader.onload = (e) => {
           file.preview = e.target.result;
+          file.progress = 0;
           setFiles((prevFiles) => [...prevFiles, file]); // Обновляем состояние с новым файлом и его превью
         };
         reader.readAsDataURL(file);
         return file;
       }
-
-
     });
 
     scrollToRef();
@@ -102,6 +103,7 @@ export default function Upload() {
       return;
     }
     try {
+      setBtnDisabled(true)
       // Create the file metadata
       /** @type {any} */
       const metadata = {
@@ -109,16 +111,30 @@ export default function Upload() {
       };
 
       files.forEach(async (file) => {
-
-        const storageRef = ref(storage, `images/${Date.now()+"_"+file.name}`);
+        const storageRef = ref(
+          storage,
+          `images/${Date.now() + "_" + file.name}`
+        );
         const uploadTask = uploadBytesResumable(storageRef, file, metadata);
         uploadTask.on(
           "state_changed",
           (snapshot) => {
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Upload is " + progress + "% done");
+            // const progress = Math.round(
+            //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+            //   2
+            // );
+            const newFiles = files.map((elem) => {
+              if (elem.name === file.name) {
+                elem.progress = Math.round(
+                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+                  2
+                );
+              }
+              return elem;
+            }).filter((file) => file.progress !== 100);
+            setFiles(() => newFiles);
+
             switch (snapshot.state) {
               case "paused":
                 console.log("Upload is paused");
@@ -145,8 +161,8 @@ export default function Upload() {
           },
           () => {
             // Upload completed successfully, now we can get the download URL
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              console.log("File available at", downloadURL);
+            getDownloadURL(uploadTask.snapshot.ref).then(() => {
+              console.log("File available at");
             });
           }
         );
@@ -388,7 +404,7 @@ export default function Upload() {
       {files.length > 0 && (
         <div className={styles.wrapper_preview_photos}>
           {files.map((file, index) => (
-            <div key={index} className={styles.preview_image}>
+            file.progress !== 100 && (<div key={index} className={styles.preview_image}>
               <div
                 className={styles.preview_remove}
                 onClick={() => removePreviewPhoto(file.preview)}
@@ -410,19 +426,22 @@ export default function Upload() {
 
                 {/* полоса загрузки фото */}
                 <div>
-                  <div className={styles.preview_info_progress}>
-                    {/* {{ getProgressLoadPhoto }} */}
+                  <div
+                    className={styles.preview_info_progress}
+                    style={{ width: `${file.progress}%` }}
+                  >
+                    {file.progress !== 0 && file.progress + "%"}
                   </div>
                 </div>
               </div>
-            </div>
+            </div>)
           ))}
         </div>
       )}
 
       <div ref={addBtn} className={styles.wrapper_btn_next_gal}>
         {files.length > 0 && (
-          <button
+          <button disabled={btnDisabled}
             onClick={addPhotoServer}
             className={`${styles.btn_next_gal} ${styles.btn_next_gal_shadow}`}
           >

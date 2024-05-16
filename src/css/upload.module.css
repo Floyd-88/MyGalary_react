@@ -42,6 +42,14 @@
   background-color: rgb(63, 166, 118);
 }
 
+.btn_next_gal:disabled {
+  transform: scale(1);
+  background: rgb(143, 147, 145);
+  cursor:auto;
+  color: rgb(197, 194, 194);
+  opacity: .7;
+}
+
 .header_btns_load_photo {
   display: flex;
 }
@@ -98,10 +106,15 @@
 }
 
 .preview_image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   margin-bottom: .5rem;
   margin-right: .5rem;
   overflow: hidden;
+  flex-basis: 30%;
+  max-height: 400px;
 
   -webkit-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.6);
   -moz-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.6);
