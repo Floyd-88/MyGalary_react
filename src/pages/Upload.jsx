@@ -2,12 +2,21 @@ import styles from "../css/upload.module.css";
 
 import Paralax from "../components/Paralax";
 import { useRef, useState } from "react";
+import "../firebaseConfig";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+
+const storage = getStorage();
 
 export default function Upload() {
   const [isSelect, setIsSelect] = useState(false);
   const [selectCat, setSelectCat] = useState("");
   const [files, setFiles] = useState([]);
-  const [progressLoadPhoto, setProgressLoadPhoto] = useState(0);
+  // const [progressLoadPhoto, setProgressLoadPhoto] = useState(0);
 
   const photos = useRef(null);
   const addBtn = useRef(null);
@@ -45,40 +54,29 @@ export default function Upload() {
     } else {
       photoFiles = photos.current.files;
     }
-    console.log(photoFiles);
-
     //трансформируем выбранные картинки в массив
-    const newFiles = Array.from(photoFiles);
-    // setFiles(newFiles);
+    const filesArray = Array.from(photoFiles);
 
-    //переберам массив выбранных картинок
-    newFiles.forEach((file) => {
-      console.log(file.type);
-      //если картинка не соответствует формату или размеру показываем сообщение
+    filesArray.map((file) => {
       if (!allowedTypes.includes(file.type)) {
         console.log("Формат одного из выбранных файлов не поддерживается");
-        newFiles.filter((elem) => elem.name != file.name);
+        filesArray.filter((elem) => elem.name != file.name);
         return;
-      }
-      if (file.size > 5000000) {
+      } else if (file.size > 5000000) {
         console.log("Размер одной из фоторгафий превышает допустимый");
-        newFiles.filter((elem) => elem.name != file.name);
+        filesArray.filter((elem) => elem.name != file.name);
         return;
+      } else {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          file.preview = e.target.result;
+          setFiles((prevFiles) => [...prevFiles, file]); // Обновляем состояние с новым файлом и его превью
+        };
+        reader.readAsDataURL(file);
+        return file;
       }
 
-      //получаем исходный код по выбранным картинкам
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        setFiles((prev) => [
-          ...prev,
-          {
-            url: ev.target.result,
-            name: file.name.toLowerCase(),
-            size: file.size,
-          },
-        ]);
-      };
-      reader.readAsDataURL(file);
+
     });
 
     scrollToRef();
@@ -94,8 +92,68 @@ export default function Upload() {
     return Math.round(bytes / Math.pow(1024, i)) + " " + sizes[i];
   }
 
-  function removePreviewPhoto(url) {
-    setFiles((prev) => prev.filter((el) => el.url !== url));
+  function removePreviewPhoto(preview) {
+    setFiles((prev) => prev.filter((el) => el.preview !== preview));
+  }
+
+  async function addPhotoServer() {
+    if (files.length === 0) {
+      console.log("Нет файлов для загрузки");
+      return;
+    }
+    try {
+      // Create the file metadata
+      /** @type {any} */
+      const metadata = {
+        contentType: "image/jpeg",
+      };
+
+      files.forEach(async (file) => {
+
+        const storageRef = ref(storage, `images/${Date.now()+"_"+file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {
+            // A full list of error codes is available at
+            // https://firebase.google.com/docs/storage/web/handle-errors
+            switch (error.code) {
+              case "storage/unauthorized":
+                // User doesn't have permission to access the object
+                break;
+              case "storage/canceled":
+                // User canceled the upload
+                break;
+              case "storage/unknown":
+                // Unknown error occurred, inspect error.serverResponse
+                break;
+            }
+          },
+          () => {
+            // Upload completed successfully, now we can get the download URL
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              console.log("File available at", downloadURL);
+            });
+          }
+        );
+      });
+    } catch (error) {
+      console.error("Ошибка загрузки изображения:", error);
+    }
   }
 
   return (
@@ -329,26 +387,25 @@ export default function Upload() {
 
       {files.length > 0 && (
         <div className={styles.wrapper_preview_photos}>
-          {files.map((url, index) => (
+          {files.map((file, index) => (
             <div key={index} className={styles.preview_image}>
               <div
                 className={styles.preview_remove}
-                onClick={() => removePreviewPhoto(url.url)}
+                onClick={() => removePreviewPhoto(file.preview)}
               >
                 &times;
               </div>
-
               <img
                 className={styles.preview_photo}
-                src={url.url}
-                alt={url.name}
+                src={file?.preview}
+                alt={file?.name}
               />
 
               <div className={`${styles.preview_info} ${styles.active_load}`}>
                 {/* размер фото */}
                 <div className={styles.preview_info_name}>
-                  <span>{url.name}</span>
-                  <span>{bytesToSize(url.size)}</span>
+                  <span>{file.name}</span>
+                  <span>{bytesToSize(file.size)}</span>
                 </div>
 
                 {/* полоса загрузки фото */}
@@ -366,6 +423,7 @@ export default function Upload() {
       <div ref={addBtn} className={styles.wrapper_btn_next_gal}>
         {files.length > 0 && (
           <button
+            onClick={addPhotoServer}
             className={`${styles.btn_next_gal} ${styles.btn_next_gal_shadow}`}
           >
             Добавить в свою галерею

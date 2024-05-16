@@ -3,7 +3,6 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
 import "./css/NORMALIZE_STYLE.css";
-import "animate.css/animate.compat.css"
 import ErrorPage from "./pages/error-page.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
