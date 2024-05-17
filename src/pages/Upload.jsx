@@ -15,11 +15,19 @@ const storage = getStorage();
 export default function Upload() {
   const [isSelect, setIsSelect] = useState(false);
   const [selectCat, setSelectCat] = useState("");
+  const [selectIndex, setSelectIndex] = useState();
+
   const [files, setFiles] = useState([]);
-  const [btnDisabled, setBtnDisabled] = useState(false)
+  const [btnDisabled, setBtnDisabled] = useState(false);
 
   const photos = useRef(null);
   const addBtn = useRef(null);
+
+  let photosCollection = {
+    category: selectIndex,
+    name: selectCat,
+    photos: [],
+  };
 
   const scrollToRef = () => {
     setTimeout(() => {
@@ -32,13 +40,14 @@ export default function Upload() {
     // if (photos.current) {
     //   photos.current = null;
     // }
-    setFiles([])
-    setBtnDisabled(false)
+    setFiles([]);
+    setBtnDisabled(false);
 
     //при клике на кнопку срабатывает инпут
     photos.current.click();
   }
 
+  // добавляем превью фото
   function handleChangeUploadPhoto() {
     let photoFiles = {};
 
@@ -50,9 +59,9 @@ export default function Upload() {
       return;
     }
 
-    if (photos.current.files.length > 5) {
-      console.log("Вы не можете загрузить больше 5 фотографий за один раз");
-      photoFiles = Array.prototype.slice.call(photos.current.files, 0, 5);
+    if (photos.current.files.length > 4) {
+      console.log("Вы не можете загрузить больше 4 фотографий за один раз");
+      photoFiles = Array.prototype.slice.call(photos.current.files, 0, 4);
     } else {
       photoFiles = photos.current.files;
     }
@@ -93,83 +102,132 @@ export default function Upload() {
     return Math.round(bytes / Math.pow(1024, i)) + " " + sizes[i];
   }
 
+  // удаляем превью фото
   function removePreviewPhoto(preview) {
     setFiles((prev) => prev.filter((el) => el.preview !== preview));
   }
 
+  // отправка фотографий на firebase
   async function addPhotoServer() {
     if (files.length === 0) {
       console.log("Нет файлов для загрузки");
       return;
     }
     try {
-      setBtnDisabled(true)
+      setBtnDisabled(true);
       // Create the file metadata
       /** @type {any} */
       const metadata = {
         contentType: "image/jpeg",
       };
 
-      files.forEach(async (file) => {
-        const storageRef = ref(
-          storage,
-          `images/${Date.now() + "_" + file.name}`
-        );
-        const uploadTask = uploadBytesResumable(storageRef, file, metadata);
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-            // const progress = Math.round(
-            //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
-            //   2
-            // );
-            const newFiles = files.map((elem) => {
-              if (elem.name === file.name) {
-                elem.progress = Math.round(
-                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
-                  2
-                );
-              }
-              return elem;
-            }).filter((file) => file.progress !== 100);
-            setFiles(() => newFiles);
+      const uploadPromises = files.map(async (file) => {
+        return new Promise((resolve, reject) => {
+          const storageRef = ref(
+            storage,
+            `images/${Date.now() + "_" + file.name}`
+          );
+          const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const newFiles = files
+                .map((elem) => {
+                  if (elem.name === file.name) {
+                    elem.progress = Math.round(
+                      (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+                      2
+                    );
+                  }
+                  return elem;
+                })
+                .filter((file) => file.progress !== 100);
+              setFiles(() => newFiles);
 
-            switch (snapshot.state) {
-              case "paused":
-                console.log("Upload is paused");
-                break;
-              case "running":
-                console.log("Upload is running");
-                break;
+              switch (snapshot.state) {
+                case "paused":
+                  console.log("Upload is paused");
+                  break;
+                case "running":
+                  console.log("Upload is running");
+                  break;
+              }
+            },
+            (error) => {
+              // A full list of error codes is available at
+              // https://firebase.google.com/docs/storage/web/handle-errors
+              switch (error.code) {
+                case "storage/unauthorized":
+                  // User doesn't have permission to access the object
+                  break;
+                case "storage/canceled":
+                  // User canceled the upload
+                  break;
+                case "storage/unknown":
+                  // Unknown error occurred, inspect error.serverResponse
+                  break;
+              }
+              reject(error);
+            },
+            () => {
+              // Upload completed successfully, now we can get the download URL
+              getDownloadURL(uploadTask.snapshot.ref).then((urlPhoto) => {
+                // console.log("File available at");
+                photosCollection.photos.push(urlPhoto);
+                resolve();
+              });
             }
-          },
-          (error) => {
-            // A full list of error codes is available at
-            // https://firebase.google.com/docs/storage/web/handle-errors
-            switch (error.code) {
-              case "storage/unauthorized":
-                // User doesn't have permission to access the object
-                break;
-              case "storage/canceled":
-                // User canceled the upload
-                break;
-              case "storage/unknown":
-                // Unknown error occurred, inspect error.serverResponse
-                break;
-            }
-          },
-          () => {
-            // Upload completed successfully, now we can get the download URL
-            getDownloadURL(uploadTask.snapshot.ref).then(() => {
-              console.log("File available at");
-            });
-          }
-        );
+          );
+        });
       });
+
+      // Ждем завершения всех загрузок
+      Promise.all(uploadPromises)
+        .then(() => {
+          // Все загрузки завершены успешно, выполняем нужное действие
+          saveCatologPhotoServer()
+          .then((responseData) => {
+            console.log('Ответ от сервера:', responseData);
+          })
+          .catch((error) => {
+            console.error('Ошибка при отправке данных:', error);
+          });
+          
+        })
+        .catch((error) => {
+          // Обрабатываем ошибку, если какая-либо загрузка не удалась
+          console.error("Ошибка при загрузке файлов:", error);
+        });
     } catch (error) {
       console.error("Ошибка загрузки изображения:", error);
     }
+  }
+
+  async function saveCatologPhotoServer() {
+    if (photosCollection.photos.length === 0) {
+      throw new Error('Отсутствуют данные для отправки');
+    }
+    try {
+      const res = await fetch(
+        `https://afbf733ef0b7e113.mokky.dev/photos_collections`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(photosCollection)
+        }
+      )
+      if (!res.ok) {
+        throw new Error(`Ошибка HTTP: ${res.status}`);
+      } else {
+        console.log('Success');
+        return await res.json();
+      } 
+    } catch(err) {
+      console.error('Ошибка при выполнении POST-запроса:', err.message);
+      throw err;
+    }
+
   }
 
   return (
@@ -198,7 +256,10 @@ export default function Upload() {
               <div className={styles.select_cat_photo}>
                 <select
                   className={styles.select_cat_photo_sel}
-                  onChange={(e) => setSelectCat(e.target.value)}
+                  onChange={(e) => {
+                    setSelectCat(e.target.value);
+                    setSelectIndex(e.target.selectedIndex);
+                  }}
                   value={selectCat}
                 >
                   <option
@@ -366,13 +427,6 @@ export default function Upload() {
                   >
                     Черно-белые
                   </option>
-
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Черно-белые"
-                  >
-                    Добавить свою категорию
-                  </option>
                 </select>
               </div>
             )}
@@ -404,7 +458,7 @@ export default function Upload() {
       {files.length > 0 && (
         <div className={styles.wrapper_preview_photos}>
           {files.map((file, index) => (
-            file.progress !== 100 && (<div key={index} className={styles.preview_image}>
+            <div key={index} className={styles.preview_image}>
               <div
                 className={styles.preview_remove}
                 onClick={() => removePreviewPhoto(file.preview)}
@@ -434,14 +488,15 @@ export default function Upload() {
                   </div>
                 </div>
               </div>
-            </div>)
+            </div>
           ))}
         </div>
       )}
 
       <div ref={addBtn} className={styles.wrapper_btn_next_gal}>
         {files.length > 0 && (
-          <button disabled={btnDisabled}
+          <button
+            disabled={btnDisabled}
             onClick={addPhotoServer}
             className={`${styles.btn_next_gal} ${styles.btn_next_gal_shadow}`}
           >

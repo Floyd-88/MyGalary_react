@@ -20,7 +20,7 @@ export default function Gallery() {
   useEffect(() => {
     setIsLoader(true);
     fetch(
-      `https://afbf733ef0b7e113.mokky.dev/photos_collections?page=${pageCount}&limit=8&category=${
+      `https://afbf733ef0b7e113.mokky.dev/photos_collections?sortBy=-id&page=${pageCount}&limit=8&category=${
         +activeCategorys !== 0 ? activeCategorys : "*"
       }&name=*${searchCollections}*`
     )
