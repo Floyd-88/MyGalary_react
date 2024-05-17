@@ -2,3 +2,14 @@
   margin-top: 130px;
   padding: 30px;
 }
+.fone {
+  position: fixed;
+  top:0;
+  left:0;
+  background-color: rgb(61, 61, 61);
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  opacity: .8;
+  
+}

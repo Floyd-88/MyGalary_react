@@ -42,3 +42,48 @@ svg {
   width: 70px;
   height: 70px;
 }
+
+.wrapper_login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.wrapper_login button{
+  background: none;
+    border: none;
+    color: white;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: .7;
+}
+
+.wrapper_login button:hover {
+scale: 1.1;
+}
+
+.wrapper_exit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 20px;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.text_welcome {
+  width: max-content;
+  color: white;
+  color: white;
+    font-size: 14px;
+}
+
+.text_welcome span {
+font-weight: 600;
+}
+
+.exit {
+
+}

@@ -1,0 +1,20 @@
+  
+  .wrapper_form_input {
+    margin-bottom: 1rem;
+  }
+
+  .input {
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    width: 100%;
+    outline: none;
+    border: 1px solid gray;
+    background-color: white;
+  }
+  
+  .input:focus {
+  border: 2px solid gray;
+  }
+
+  
+  

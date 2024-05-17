@@ -1,0 +1,26 @@
+
+.title {
+    margin-bottom: 1rem;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    font-weight: 600;
+  }
+   
+  .form_btn_reg {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.75rem;
+    color: #425472;
+    border: none;
+    cursor: pointer;
+    transition-property: background-color, border-color, color, fill, stroke,
+      opacity, box-shadow, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+  
+  .form_btn_reg:hover {
+    font-weight: 700;
+    color: #6b7280;
+  }
+  

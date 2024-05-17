@@ -18,23 +18,29 @@ export default function Gallery() {
 
 
   useEffect(() => {
-    setIsLoader(true);
-    fetch(
+    async function getCollection () {
+      setIsLoader(true);
+    const res = await fetch(
       `https://afbf733ef0b7e113.mokky.dev/photos_collections?sortBy=-id&page=${pageCount}&limit=8&category=${
         +activeCategorys !== 0 ? activeCategorys : "*"
       }&name=*${searchCollections}*`
     )
-      .then((response) => response.json())
-      .then((data) => {
-        setPage(data.meta);
-        if (data.items.length > 0) {
-          setCollections(data.items);
-        } else {
-          setCollections([]);
-        }
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setIsLoader(false));
+    if(res.ok) {
+      const data = await res.json()
+      if(data) {
+        if (data.items) {
+          setPage(data.meta);
+            setCollections(data.items);
+          } else {
+            setCollections([]);
+          }
+      }
+    } else {
+      console.log(res)
+    }
+    setIsLoader(false);
+    }
+    getCollection()
   }, [activeCategorys, pageCount, searchCollections]);
 
   useEffect(() => {
@@ -74,7 +80,7 @@ export default function Gallery() {
           <p className={styles.is_loader}>Идет загрузка...</p>
         )}
 
-        {!isLoader ? (
+        {!isLoader && collections.length > 0 ? (
           <Pagination page={page} setPageCount={setPageCount} />
         ) : (
           ""

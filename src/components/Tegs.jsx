@@ -1,18 +1,31 @@
 import styles from "../css/tegs.module.css";
 
-export default function Tegs({ categorys, activeCategorys, setActiveCategorys, setPageCount }) {
+export default function Tegs({
+  categorys,
+  activeCategorys,
+  setActiveCategorys,
+  setPageCount,
+}) {
   return (
     <>
-      <ul className={styles.block_tegs}>
+      <select
+        className={styles.block_tegs}
+        onChange={(e) => {
+          setActiveCategorys(Number(e.target.selectedIndex));
+          setPageCount(1);
+        }}
+      >
         {categorys.map((cat, index) => (
-          <li onClick={() => {
-            setActiveCategorys(Number(cat.category))
-            setPageCount(1)
-            }} key={index} className={`${styles.tegs} ${cat.category == activeCategorys ? styles.active : ''}`}>
+          <option
+            key={index}
+            className={`${styles.tegs} ${
+              cat.category == activeCategorys ? styles.active : ""
+            }`}
+          >
             {cat.name}
-          </li>
+          </option>
         ))}
-      </ul>
+      </select>
     </>
   );
 }
