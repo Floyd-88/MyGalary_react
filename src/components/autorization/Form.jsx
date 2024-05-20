@@ -1,6 +1,9 @@
 import styles from "../../css/form.module.css";
 import BtnForm from "./BtnForm";
 
+import { registerUser } from "../../ServerRequest.js";
+import { useState } from "react";
+
 export default function Form({
   children,
   title,
@@ -8,8 +11,9 @@ export default function Form({
   btnText_2,
   formErrors,
   setFormErrors,
-  props
+  props,
 }) {
+  const [errorAuth, setErrorAuth] = useState("")
   function resetFormData() {
     props.setFormData({
       name: "",
@@ -26,16 +30,26 @@ export default function Form({
     );
 
     if (isFormValid) {
-      resetFormData();
-
       if (btnText_1 === "Регистрация") {
-        setFormErrors({
-          name: true,
-          email: true,
-          password: true,
-        });
+        registerUser(props.formData)
+          .then((data) => {
+            console.log("Успешный ответ:", data);
+            setFormErrors({
+              name: true,
+              email: true,
+              password: true,
+            });
 
-        console.log("Вы зарегистрировались");
+            resetFormData();
+            setErrorAuth("")
+            props.setShowAuto("")
+          })
+          .catch((error) => {
+            console.error("Ошибка запроса:", error);
+            if (error?.message === "RESOURCE_USER_ALREADY_EXISTS") {
+              setErrorAuth("Пользователь с такой почтой уже зарегистрирован");
+            }
+          });
       } else {
         setFormErrors({
           email: true,
@@ -60,6 +74,7 @@ export default function Form({
           {btnText_1}
         </BtnForm>
         <div>
+          <p className={styles.error_text}>{errorAuth}</p>
           <button
             className={styles.form_btn_reg}
             onClick={() => {
