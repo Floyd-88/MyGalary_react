@@ -37,7 +37,7 @@ export default function Header({setShowAuto}) {
       </ul>
       {true ? (<div className={styles.wrapper_login}>
         <img src="./come.svg" alt="" />
-        <button onClick={() => setShowAuto(true)}>войти</button>
+        <button onClick={() => setShowAuto("Войти")}>войти</button>
       </div>) :
       (<div className={styles.wrapper_exit}>
         <p className={styles.text_welcome}>Здраствуйте, <span>Илья</span></p>

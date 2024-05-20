@@ -12,14 +12,13 @@
   background-color: #494cde;
   border: none;
   cursor: pointer;
-  /* transition-property: background-color, border-color, color, fill, stroke,
-      opacity, box-shadow, transform;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 300ms;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-      0 4px 6px -2px rgba(0, 0, 0, 0.05); */
 }
 
 .form_btn_enter:hover {
   background-color: #291fdb;
+}
+
+.form_btn_enter:disabled {
+  background-color: #6b6b75;
+  cursor: auto;
 }

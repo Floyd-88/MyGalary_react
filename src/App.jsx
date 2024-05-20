@@ -8,14 +8,32 @@ import Autorization from "./components/autorization/Autorization";
 import Register from "./components/autorization/Register";
 
 export default function App() {
-  const [showAuto, setShowAuto] = useState(false);
+  const [showAuto, setShowAuto] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
   return (
     <>
       {showAuto && (
-        <div className={styles.fone} onClick={() => setShowAuto(false)}></div>
+        <div className={styles.fone} onClick={() => setShowAuto("")}></div>
       )}
-      {/* {showAuto && <Autorization />} */}
-      {showAuto && <Register />}
+      {showAuto === "Войти" && (
+        <Autorization
+          setShowAuto={setShowAuto}
+          formData={formData}
+          setFormData={setFormData}
+        />
+      )}
+      {showAuto === "Создать новый аккаунт" && (
+        <Register
+          setShowAuto={setShowAuto}
+          formData={formData}
+          setFormData={setFormData}
+        />
+      )}
 
       <Header setShowAuto={setShowAuto} />
       <Outlet />

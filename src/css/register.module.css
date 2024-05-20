@@ -16,64 +16,6 @@
     background: whitesmoke;
 }
 
-.title {
-  margin-bottom: 1rem;
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-  font-weight: 600;
-}
-
-.wrapper_input {
-  margin-bottom: 1rem;
-}
-
-
-
-.error_text {
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  color: #ef4444;
-}
-
-.form_btn_register {
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-    padding-left: 3rem;
-    padding-right: 3rem;
-    margin-bottom: 1rem;
-    border-radius: 1.5rem;
-    font-size: 1.5rem;
-    line-height: 2rem;
-    font-weight: 700;
-    color: #ffffff;
-    background-color: #494cde;
-    border: none;
-    cursor: pointer;
-}
-
-.form_btn_register:hover {
-    background-color: #291fdb;
-}
-
-.form_btn_enter {
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.75rem;
-    color: #425472;
-    border: none;
-    cursor: pointer;
-    transition-property: background-color, border-color, color, fill, stroke,
-      opacity, box-shadow, transform;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 300ms;
-}
-
-.form_btn_enter:hover {
-    font-weight: 700;
-    color: #6b7280;
-}
-
 .success {
   margin-bottom: 1rem;
   font-size: 1.125rem;

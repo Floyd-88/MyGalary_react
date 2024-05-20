@@ -1,8 +1,14 @@
+import { useState } from "react";
 import styles from "../../css/register.module.css";
 import Form from "./Form";
 import InputForm from "./InputForm";
 
-export default function Register() {
+export default function Register(props) {
+  const [formErrors, setFormErrors] = useState({
+    name: true,
+    email: true,
+    password: true,
+  });
   return (
     <>
       <div className={styles.wrapper_form}>
@@ -10,26 +16,33 @@ export default function Register() {
           title={"Создать новую учетную запись!"}
           btnText_1={"Регистрация"}
           btnText_2={"Войти"}
+          formErrors={formErrors}
+          setFormErrors={setFormErrors}
+          props={props}
         >
           <InputForm
             type={"text"}
-            id={"name"}
+            name={"name"}
             placeholder={"Введите свое имя"}
-          />
-          <InputForm
-            type={"text"}
-            id={"login"}
-            placeholder={"Введите свой логин"}
+            formErrors={formErrors}
+            setFormErrors={setFormErrors}
+            props={props}
           />
           <InputForm
             type={"email"}
-            id={"email"}
+            name={"email"}
             placeholder={"Введите электронный адрес"}
+            formErrors={formErrors}
+            setFormErrors={setFormErrors}
+            props={props}
           />
           <InputForm
             type={"password"}
-            id={"password"}
+            name={"password"}
             placeholder={"Придумайте пароль"}
+            formErrors={formErrors}
+            setFormErrors={setFormErrors}
+            props={props}
           />
 
           {/* <h2 className={styles.success}>
