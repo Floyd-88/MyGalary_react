@@ -3,7 +3,7 @@ import styles from "./css/app.module.css";
 import Header from "./components/Header";
 // import Gallery from "./pages/Gallery";
 import { Outlet } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Autorization from "./components/autorization/Autorization";
 import Register from "./components/autorization/Register";
 
@@ -15,6 +15,18 @@ export default function App() {
     password: "",
   });
 
+  const [user, setUser] = useState({})
+
+  useEffect(() => {
+    const userStorage = JSON.parse(localStorage.getItem('user_gallery'));
+    if (userStorage) {
+      setUser(userStorage);
+    } else {
+      setUser({});
+    }
+  }, []);
+
+
   return (
     <>
       {showAuto && (
@@ -25,6 +37,7 @@ export default function App() {
           setShowAuto={setShowAuto}
           formData={formData}
           setFormData={setFormData}
+          setUser={setUser}
         />
       )}
       {showAuto === "Создать новый аккаунт" && (
@@ -35,7 +48,7 @@ export default function App() {
         />
       )}
 
-      <Header setShowAuto={setShowAuto} />
+      <Header user={user} setUser={setUser} setShowAuto={setShowAuto} />
       <Outlet />
     </>
   );

@@ -18,29 +18,35 @@ export default function Gallery() {
 
 
   useEffect(() => {
-    async function getCollection () {
+    async function getCollection() {
       setIsLoader(true);
-    const res = await fetch(
-      `https://afbf733ef0b7e113.mokky.dev/photos_collections?sortBy=-id&page=${pageCount}&limit=8&category=${
-        +activeCategorys !== 0 ? activeCategorys : "*"
-      }&name=*${searchCollections}*`
-    )
-    if(res.ok) {
-      const data = await res.json()
-      if(data) {
-        if (data.items) {
-          setPage(data.meta);
+      const res = await fetch(
+        `https://afbf733ef0b7e113.mokky.dev/photos_collections?userID=${JSON.parse(localStorage.getItem("user_gallery"))?.id || ""}&sortBy=-id&page=${pageCount}&limit=8&category=${
+          +activeCategorys !== 0 ? activeCategorys : "*"
+        }&name=*${searchCollections}*`,
+        {
+          method: "GET",
+          headers: {
+            "Authorization": "Bearer " + JSON.parse(localStorage.getItem("token_gallery")),
+          },
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        if (data) {
+          if (data.items) {
+            setPage(data.meta);
             setCollections(data.items);
           } else {
             setCollections([]);
           }
+        }
+      } else {
+        console.log(res);
       }
-    } else {
-      console.log(res)
+      setIsLoader(false);
     }
-    setIsLoader(false);
-    }
-    getCollection()
+    getCollection();
   }, [activeCategorys, pageCount, searchCollections]);
 
   useEffect(() => {
@@ -55,7 +61,12 @@ export default function Gallery() {
   }, []);
   return (
     <>
-    <Paralax  text_2={'GALLERY'} text_btn={"Home"} fone={"./paralax_1.jpg"} to={"/"}/>
+      <Paralax
+        text_2={"GALLERY"}
+        text_btn={"Home"}
+        fone={"./paralax_1.jpg"}
+        to={"/"}
+      />
       <div className={styles.container}>
         <div className={styles.block_header}>
           <Tegs

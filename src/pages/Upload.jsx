@@ -12,6 +12,9 @@ import {
 
 const storage = getStorage();
 
+const token = JSON.parse(localStorage.getItem("token_gallery"))
+const user = JSON.parse(localStorage.getItem("user_gallery"))
+
 export default function Upload() {
   const [isSelect, setIsSelect] = useState(false);
   const [selectCat, setSelectCat] = useState("");
@@ -208,11 +211,13 @@ export default function Upload() {
       throw new Error('Отсутствуют данные для отправки');
     }
     try {
+      photosCollection.userID = user?.id || "";
       const res = await fetch(
         `https://afbf733ef0b7e113.mokky.dev/photos_collections`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "Authorization": "Bearer " + token,
           },
           body: JSON.stringify(photosCollection)
         }
@@ -240,7 +245,7 @@ export default function Upload() {
         to={"/gallery"}
       >
         <div className={styles.wrapper_upload_photo}>
-          <button
+          {token && <button
             className={styles.btn_next_gal}
             onClick={() => {
               setIsSelect(true);
@@ -249,7 +254,7 @@ export default function Upload() {
             }}
           >
             New Photo
-          </button>
+          </button>}
 
           <div className={styles.header_btns_load_photo}>
             {isSelect && (

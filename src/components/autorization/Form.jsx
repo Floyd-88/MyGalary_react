@@ -1,7 +1,7 @@
 import styles from "../../css/form.module.css";
 import BtnForm from "./BtnForm";
 
-import { registerUser } from "../../ServerRequest.js";
+import { registerUser, authorizationUser } from "../../ServerRequest.js";
 import { useState } from "react";
 
 export default function Form({
@@ -14,12 +14,17 @@ export default function Form({
   props,
 }) {
   const [errorAuth, setErrorAuth] = useState("")
+
   function resetFormData() {
     props.setFormData({
       name: "",
       email: "",
       password: "",
     });
+    setFormErrors((prev) => prev.map(elem => elem ? elem = true : elem));
+
+    setErrorAuth("")
+    props.setShowAuto("")
   }
 
   const handleSubmit = (e) => {
@@ -34,15 +39,7 @@ export default function Form({
         registerUser(props.formData)
           .then((data) => {
             console.log("Успешный ответ:", data);
-            setFormErrors({
-              name: true,
-              email: true,
-              password: true,
-            });
-
-            resetFormData();
-            setErrorAuth("")
-            props.setShowAuto("")
+            resetFormData()
           })
           .catch((error) => {
             console.error("Ошибка запроса:", error);
@@ -51,12 +48,18 @@ export default function Form({
             }
           });
       } else {
-        setFormErrors({
-          email: true,
-          password: true,
+        authorizationUser(props.formData)
+        .then(({data}) => {
+          console.log("Успешный ответ:", data);
+          resetFormData()
+          props.setUser(data)
+        })
+        .catch((error) => {
+          console.error("Ошибка запроса:", error);
+          if(error?.message === 'RESOURCE_INVALID_LOGIN_OR_PASSWORD') {
+            setErrorAuth("Пользователя с таким логином или паролем не найдено")
+          }
         });
-
-        console.log("Вы авторизовались");
       }
     } else {
       console.log("Форма содержит ошибки в полях ввода");

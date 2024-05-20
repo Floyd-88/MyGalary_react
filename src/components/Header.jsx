@@ -1,7 +1,13 @@
 import { NavLink } from "react-router-dom";
 import styles from "../css/header.module.css";
 
-export default function Header({setShowAuto}) {
+import {exitUser} from "../ServerRequest.js"
+
+export default function Header({setShowAuto, user, setUser}) {
+  function exit() {
+    exitUser()
+    setUser({})
+  }
   return (
     <div className={styles.header}>
       {/* <h1 className={styles.title}>Photo gallery</h1> */}
@@ -35,13 +41,13 @@ export default function Header({setShowAuto}) {
         <NavLink to={`about`}>ABOUT</NavLink>
         <NavLink to={`contact`}>CONTACT</NavLink>
       </ul>
-      {true ? (<div className={styles.wrapper_login}>
+      {!user.name ? (<div className={styles.wrapper_login}>
         <img src="./come.svg" alt="" />
         <button onClick={() => setShowAuto("Войти")}>войти</button>
       </div>) :
       (<div className={styles.wrapper_exit}>
-        <p className={styles.text_welcome}>Здраствуйте, <span>Илья</span></p>
-        <a className={styles.exit} href="">Выход</a>
+        <p className={styles.text_welcome}>Hi, <span>{user?.name}</span></p>
+        <a className={styles.exit} href="" onClick={() => exit()}>Выход</a>
       </div>)
       }
     </div>
