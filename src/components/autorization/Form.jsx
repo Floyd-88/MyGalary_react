@@ -24,7 +24,6 @@ export default function Form({
     setFormErrors((prev) => prev.map(elem => elem ? elem = true : elem));
 
     setErrorAuth("")
-    props.setShowAuto("")
   }
 
   const handleSubmit = (e) => {
@@ -40,6 +39,9 @@ export default function Form({
           .then((data) => {
             console.log("Успешный ответ:", data);
             resetFormData()
+            props.setShowAuto("")
+            props.setUser(data.data)
+            props.setToken(data.token)
           })
           .catch((error) => {
             console.error("Ошибка запроса:", error);
@@ -49,10 +51,12 @@ export default function Form({
           });
       } else {
         authorizationUser(props.formData)
-        .then(({data}) => {
+        .then((data) => {
           console.log("Успешный ответ:", data);
           resetFormData()
-          props.setUser(data)
+          props.setShowAuto("")
+          props.setUser(data.data)
+          props.setToken(data.token)
         })
         .catch((error) => {
           console.error("Ошибка запроса:", error);

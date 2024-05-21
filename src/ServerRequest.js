@@ -32,7 +32,11 @@ export async function registerUser(data) {
 
   // Обработка успешного ответа
   const result = await response.json();
-  return result;
+  if (result.token) {
+    localStorage.setItem("token_gallery", JSON.stringify(result.token));
+    localStorage.setItem("user_gallery", JSON.stringify(result.data));
+    return result;
+  }
 }
 
 //АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ

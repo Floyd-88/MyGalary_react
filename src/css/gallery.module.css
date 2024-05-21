@@ -16,6 +16,14 @@
     font-weight: 600;
   }
 
+  .is_loader span {
+    color: rgb(138, 139, 138);
+    cursor: pointer;
+  }
+  .is_loader span:hover {
+    color: rgb(35, 36, 35);
+  }
+
   .display_none {
     display: none;
   }

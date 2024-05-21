@@ -9,11 +9,12 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+import { useOutletContext } from "react-router-dom";
 
 const storage = getStorage();
 
-const token = JSON.parse(localStorage.getItem("token_gallery"))
-const user = JSON.parse(localStorage.getItem("user_gallery"))
+// const token = JSON.parse(localStorage.getItem("token_gallery"))
+// const user = JSON.parse(localStorage.getItem("user_gallery"))
 
 export default function Upload() {
   const [isSelect, setIsSelect] = useState(false);
@@ -26,6 +27,8 @@ export default function Upload() {
   const photos = useRef(null);
   const addBtn = useRef(null);
 
+  const { setShowAuto, user, token } = useOutletContext();
+
   let photosCollection = {
     category: selectIndex,
     name: selectCat,
@@ -37,6 +40,16 @@ export default function Upload() {
       addBtn.current.scrollIntoView({ behavior: "smooth" });
     }, 500);
   };
+
+  function newPhoto() {
+    if(user.id) {
+      setIsSelect(true);
+      setSelectCat("");
+      setFiles([]);
+    } else {
+      setShowAuto("Войти")
+    }
+  }
 
   function handleCLickUploadPhoto() {
     //сбрасываем загрузчик что бы можно было выбрать тот же файл еще раз
@@ -245,12 +258,10 @@ export default function Upload() {
         to={"/gallery"}
       >
         <div className={styles.wrapper_upload_photo}>
-          {token && <button
+          {<button
             className={styles.btn_next_gal}
             onClick={() => {
-              setIsSelect(true);
-              setSelectCat("");
-              setFiles([]);
+              newPhoto()
             }}
           >
             New Photo

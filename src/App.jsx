@@ -16,13 +16,17 @@ export default function App() {
   });
 
   const [user, setUser] = useState({})
+  const [token, setToken] = useState("")
 
   useEffect(() => {
     const userStorage = JSON.parse(localStorage.getItem('user_gallery'));
-    if (userStorage) {
+    const tokenStorage = JSON.parse(localStorage.getItem("token_gallery"))
+    if (userStorage && tokenStorage) {
       setUser(userStorage);
+      setToken(tokenStorage)
     } else {
       setUser({});
+      setToken("")
     }
   }, []);
 
@@ -38,6 +42,7 @@ export default function App() {
           formData={formData}
           setFormData={setFormData}
           setUser={setUser}
+          setToken={setToken}
         />
       )}
       {showAuto === "Создать новый аккаунт" && (
@@ -45,11 +50,13 @@ export default function App() {
           setShowAuto={setShowAuto}
           formData={formData}
           setFormData={setFormData}
+          setUser={setUser}
+          setToken={setToken}
         />
       )}
 
       <Header user={user} setUser={setUser} setShowAuto={setShowAuto} />
-      <Outlet />
+      <Outlet context={{ setShowAuto, user, token }}/>
     </>
   );
 }

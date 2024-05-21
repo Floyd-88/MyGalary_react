@@ -6,6 +6,8 @@ import Tegs from "../components/Tegs";
 import styles from "../css/gallery.module.css";
 import { useState } from "react";
 import Paralax from "../components/Paralax";
+import { useOutletContext } from "react-router-dom";
+import { PHOTOS_URL, TEST_PHOTOS_URL } from "../constantsUrlAPI";
 
 export default function Gallery() {
   const [collections, setCollections] = useState([]);
@@ -16,18 +18,22 @@ export default function Gallery() {
   const [pageCount, setPageCount] = useState(1);
   const [isLoader, setIsLoader] = useState(false);
 
+  // const user = JSON.parse(localStorage.getItem("user_gallery"))
+  // const token = JSON.parse(localStorage.getItem("token_gallery"))
+
+  const { setShowAuto, user, token } = useOutletContext();
 
   useEffect(() => {
     async function getCollection() {
       setIsLoader(true);
       const res = await fetch(
-        `https://afbf733ef0b7e113.mokky.dev/photos_collections?userID=${JSON.parse(localStorage.getItem("user_gallery"))?.id || ""}&sortBy=-id&page=${pageCount}&limit=8&category=${
+        `${token ? PHOTOS_URL : TEST_PHOTOS_URL}?userID=${user?.id || '*'}&sortBy=-id&page=${pageCount}&limit=8&category=${
           +activeCategorys !== 0 ? activeCategorys : "*"
         }&name=*${searchCollections}*`,
         {
           method: "GET",
           headers: {
-            "Authorization": "Bearer " + JSON.parse(localStorage.getItem("token_gallery")),
+            "Authorization": "Bearer " + token,
           },
         }
       );
@@ -47,7 +53,7 @@ export default function Gallery() {
       setIsLoader(false);
     }
     getCollection();
-  }, [activeCategorys, pageCount, searchCollections]);
+  }, [activeCategorys, pageCount, searchCollections, token, user?.id]);
 
   useEffect(() => {
     fetch("https://afbf733ef0b7e113.mokky.dev/categorys")
@@ -96,13 +102,15 @@ export default function Gallery() {
         ) : (
           ""
         )}
-        <p
+        { !user.id ?
+          <p className={styles.is_loader} >Для создания своей собственной галереи Вам необходимо <span onClick={() => setShowAuto("Войти")}>авторизоваться</span>!</p> :  
+          <p
           className={`${styles.is_loader} ${
             !(collections.length === 0 && !isLoader) ? styles.display_none : ""
           }`}
         >
           Ничего не найдено
-        </p>
+        </p>}
       </div>
     </>
   );

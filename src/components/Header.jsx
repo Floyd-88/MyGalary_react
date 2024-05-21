@@ -47,7 +47,7 @@ export default function Header({setShowAuto, user, setUser}) {
       </div>) :
       (<div className={styles.wrapper_exit}>
         <p className={styles.text_welcome}>Hi, <span>{user?.name}</span></p>
-        <a className={styles.exit} href="" onClick={() => exit()}>Выход</a>
+        <a className={styles.exit} href="" onClick={() => exit()}>выход</a>
       </div>)
       }
     </div>
