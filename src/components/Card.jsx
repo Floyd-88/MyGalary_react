@@ -7,7 +7,7 @@ export default function Card({ collection, openModal }) {
         <ul className={styles.items_photo}>
           {collection.photos.map((photo, index) => (
             <li key={index} className={styles.item_photo}>
-              <img src={photo} alt="photo"  onClick={() => openModal(photo)}/>
+              <img src={photo} alt="photo"  onClick={() => openModal({photoSrc: photo, collection})}/>
             </li>
           ))}
         </ul>

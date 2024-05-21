@@ -11,40 +11,7 @@ import { PHOTOS_URL, TEST_PHOTOS_URL } from "../constantsUrlAPI";
 import ShowPhoto from "../components/ShowPhoto";
 
 export default function Gallery() {
-  const [collections, setCollections] = useState([{
-    "category": 14,
-    "name": "Музыка",
-    "photos": [
-      "https://firebasestorage.googleapis.com/v0/b/gallery-33436.appspot.com/o/images%2F1716233563686_apcm_photomix2_0093.jpg?alt=media&token=a81d77f9-44e4-40c4-b7c1-ba11c3b74f51",
-      "https://firebasestorage.googleapis.com/v0/b/gallery-33436.appspot.com/o/images%2F1716233563686_apcm_photomix2_0091.jpg?alt=media&token=a8e3afc4-ab77-4210-bed7-805be25b4e4a",
-      "https://firebasestorage.googleapis.com/v0/b/gallery-33436.appspot.com/o/images%2F1716233563686_apcm_photomix2_0092.jpg?alt=media&token=c0aa0a5c-35bc-476a-bfb7-2385af727531",
-      "https://firebasestorage.googleapis.com/v0/b/gallery-33436.appspot.com/o/images%2F1716233563685_apcm_photomix2_0090.jpg?alt=media&token=05432f74-de81-4ed3-accc-a09375b664b7"
-    ],
-    "userID": 1,
-    "id": 1,
-    "user": {
-      "name": "alex",
-      "email": "aaa@mail.ru",
-      "id": 2
-    }
-  },
-  {
-    "category": 20,
-    "name": "Природа",
-    "photos": [
-      "https://firebasestorage.googleapis.com/v0/b/gallery-33436.appspot.com/o/images%2F1716233605152_apcm_photomix2_0019.jpg?alt=media&token=de0c4c71-2a7f-4794-9f64-896999a8f717",
-      "https://firebasestorage.googleapis.com/v0/b/gallery-33436.appspot.com/o/images%2F1716233605150_apcm_photomix2_0017.jpg?alt=media&token=4d086540-a492-4c3c-aa85-5eb776292628",
-      "https://firebasestorage.googleapis.com/v0/b/gallery-33436.appspot.com/o/images%2F1716233605152_apcm_photomix2_0020.jpg?alt=media&token=ae618ede-5b98-454f-a4a4-f5e234df3554",
-      "https://firebasestorage.googleapis.com/v0/b/gallery-33436.appspot.com/o/images%2F1716233605151_apcm_photomix2_0018.jpg?alt=media&token=3838a690-5c47-4734-8fe5-c333284eb3f9"
-    ],
-    "userID": 1,
-    "id": 2,
-    "user": {
-      "name": "boris",
-      "email": "bbb@mail.ru",
-      "id": 3
-    }
-  }]);
+  const [collections, setCollections] = useState([]);
   const [categorys, setCategorys] = useState([]);
   const [activeCategorys, setActiveCategorys] = useState(0);
   const [searchCollections, setSearchCollections] = useState("");
@@ -52,16 +19,19 @@ export default function Gallery() {
   const [pageCount, setPageCount] = useState(1);
   const [isLoader, setIsLoader] = useState(false);
 
-  const { setShowAuto, user, token } = useOutletContext();
+  const { setShowAuto, user } = useOutletContext();
+  const token = JSON.parse(localStorage.getItem("token_gallery"));
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
 
-  const [errorAuth, setErrorAuth] = useState("")
+  const [errorAuth, setErrorAuth] = useState("");
+  const [errorAuthRemove, setErrorAuthRemove] = useState("");
 
   const openModal = (photo) => {
     setSelectedPhoto(photo);
     setIsModalOpen(true);
+    setErrorAuth("");
   };
 
   const closeModal = () => {
@@ -70,20 +40,20 @@ export default function Gallery() {
   };
 
   useEffect(() => {
+    if (token === undefined || user === undefined) return;
     async function getCollection() {
       setIsLoader(true);
       try {
-        const res = await fetch(
-          `${token ? PHOTOS_URL : TEST_PHOTOS_URL}?userID=${user?.id || '*'}&sortBy=-id&page=${pageCount}&limit=8&category=${
-            +activeCategorys !== 0 ? activeCategorys : "*"
-          }&name=*${searchCollections}*`,
-          {
-            method: "GET",
-            headers: {
-              "Authorization": "Bearer " + token,
-            },
-          }
-        );
+        const url = token
+          ? `${PHOTOS_URL}?photos=https*&userID=${user?.id}&sortBy=-id&page=${pageCount}&limit=8&category=${+activeCategorys !== 0 ? activeCategorys : "*"}&name=*${searchCollections}*`
+          : `${TEST_PHOTOS_URL}?photos=https*&userID=*&sortBy=-id&page=${pageCount}&limit=8&category=${+activeCategorys !== 0 ? activeCategorys : "*"}&name=*${searchCollections}*`;
+
+        const headers = token ? { Authorization: "Bearer " + token } : {};
+
+        const res = await fetch(url, {
+          method: "GET",
+          headers,
+        });
 
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
@@ -91,32 +61,31 @@ export default function Gallery() {
 
         const data = await res.json();
 
-        if (data && data.items) {
+        if (data.items && data.items.length > 0) {
           setPage(data.meta);
           setCollections(data.items);
-        } else {
-          setCollections([]);
         }
       } catch (error) {
-        console.error('Ошибка при выполнении запроса:', error);
-
-          setErrorAuth("Возникли проблемы с сервером, повторите попытку позже")
-        
+        console.error("Ошибка при выполнении запроса:", error);
+        setErrorAuth("Возникли проблемы с сервером, повторите попытку позже");
       } finally {
         setIsLoader(false);
       }
     }
+
     getCollection();
 
     return () => {
       setErrorAuth("");
     };
-  }, [activeCategorys, pageCount, searchCollections, token, user?.id]);
-
+  }, [activeCategorys, pageCount, searchCollections, token, user]);
+  
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const response = await fetch("https://afbf733ef0b7e113.mokky.dev/categorys");
+        const response = await fetch(
+          "https://afbf733ef0b7e113.mokky.dev/categorys"
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -125,12 +94,50 @@ export default function Gallery() {
           setCategorys(data);
         }
       } catch (error) {
-        console.error('Ошибка при выполнении запроса:', error);
+        console.error("Ошибка при выполнении запроса:", error);
       }
     }
 
     fetchCategories();
   }, []);
+
+  async function removePhoto() {
+    const newCollection = selectedPhoto.collection.photos;
+    const newPhotos = newCollection.filter(
+      (photo) => photo !== selectedPhoto.photoSrc
+    );
+    try {
+      const res = await fetch(`${PHOTOS_URL}/${selectedPhoto.collection.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({ photos: newPhotos }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      if (data) {
+        const newCollections = collections.map((collection) => {
+          if (collection.id === data.id) {
+            return data;
+          }
+          return collection;
+        });
+        setCollections(newCollections);
+        closeModal();
+      }
+    } catch (error) {
+      console.error("Ошибка при выполнении запроса:", error);
+      setErrorAuthRemove("Для удаления фотографий необходимо авторизоваться");
+    }
+  }
+
   return (
     <>
       <Paralax
@@ -154,30 +161,40 @@ export default function Gallery() {
           />
         </div>
         {!isLoader ? (
-          <Cards
-            collections={collections}
-            openModal={openModal}
-          />
+          <Cards collections={collections} openModal={openModal} />
         ) : (
           <p className={styles.is_loader}>Идет загрузка...</p>
         )}
 
-        <ShowPhoto isModalOpen={isModalOpen} selectedPhoto={selectedPhoto} closeModal={closeModal}/>
+        <ShowPhoto
+          isModalOpen={isModalOpen}
+          selectedPhoto={selectedPhoto}
+          closeModal={closeModal}
+          removePhoto={removePhoto}
+          errorAuthRemove={errorAuthRemove}
+        />
         {<p className={styles.error_text}>{errorAuth}</p>}
         {!isLoader && collections.length > 0 ? (
           <Pagination page={page} setPageCount={setPageCount} />
         ) : (
           ""
         )}
-        { !user.id ?
-          <p className={styles.is_loader} >Для создания своей собственной галереи Вам необходимо <span onClick={() => setShowAuto("Войти")}>авторизоваться</span>!</p> :  
+        {!user.id ? (
+          <p className={styles.is_loader}>
+            Для создания своей собственной галереи Вам необходимо{" "}
+            <span onClick={() => setShowAuto("Войти")}>авторизоваться</span>!
+          </p>
+        ) : (
           <p
-          className={`${styles.is_loader} ${
-            !(collections.length === 0 && !isLoader) ? styles.display_none : ""
-          }`}
-        >
-          Ничего не найдено
-        </p>}
+            className={`${styles.is_loader} ${
+              !(collections.length === 0 && !isLoader)
+                ? styles.display_none
+                : ""
+            }`}
+          >
+            Ничего не найдено
+          </p>
+        )}
       </div>
     </>
   );
