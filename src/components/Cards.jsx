@@ -1,14 +1,13 @@
 import Card from "./Card";
 import styles from "../css/cards.module.css";
 
-export default function Cards({collections}) {
+export default function Cards({collections, openModal}) {
   return (
     <>
       <div className={styles.block_cards}>
         {collections
-        // .filter((collection) => collection.name.toLocaleLowerCase().includes(searchCollections.toLocaleLowerCase()))
         .map((collection, index) => (
-        <Card key={index} collection={collection}/>
+        <Card key={index} collection={collection} openModal={openModal}/>
         ))}
 
       </div>

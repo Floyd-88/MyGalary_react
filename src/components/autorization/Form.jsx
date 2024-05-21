@@ -48,6 +48,9 @@ export default function Form({
             if (error?.message === "RESOURCE_USER_ALREADY_EXISTS") {
               setErrorAuth("Пользователь с такой почтой уже зарегистрирован");
             }
+            else {
+              setErrorAuth("Возникли проблемы с сервером, повторите попытку позже")
+            }
           });
       } else {
         authorizationUser(props.formData)
@@ -62,6 +65,8 @@ export default function Form({
           console.error("Ошибка запроса:", error);
           if(error?.message === 'RESOURCE_INVALID_LOGIN_OR_PASSWORD') {
             setErrorAuth("Пользователя с таким логином или паролем не найдено")
+          } else {
+            setErrorAuth("Возникли проблемы с сервером, повторите попытку позже")
           }
         });
       }

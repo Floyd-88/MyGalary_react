@@ -27,3 +27,11 @@
   .display_none {
     display: none;
   }
+
+  .error_text {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #EF4444;
+    text-align: left;
+    margin-top: 3px;
+  }
