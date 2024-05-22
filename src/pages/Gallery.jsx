@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Cards from "../components/Cards";
 import Pagination from "../components/Pagination";
 import Search from "../components/Search";
@@ -9,6 +9,7 @@ import Paralax from "../components/Paralax";
 import { useOutletContext } from "react-router-dom";
 import { PHOTOS_URL, TEST_PHOTOS_URL } from "../constantsUrlAPI";
 import ShowPhoto from "../components/ShowPhoto";
+import Loader from "../components/Loader";
 
 export default function Gallery() {
   const [collections, setCollections] = useState([]);
@@ -27,6 +28,8 @@ export default function Gallery() {
 
   const [errorAuth, setErrorAuth] = useState("");
   const [errorAuthRemove, setErrorAuthRemove] = useState("");
+
+  const containerRef = useRef(null);
 
   const openModal = (photo) => {
     setSelectedPhoto(photo);
@@ -138,6 +141,17 @@ export default function Gallery() {
     }
   }
 
+  const handlePageClick = (pageNumber) => {
+    setPageCount(pageNumber);
+    setTimeout(() => {
+      window.scrollTo({
+        top: containerRef.current.offsetTop,
+        behavior: 'smooth',
+      });
+
+    }, 0)
+  };
+
   return (
     <>
       <Paralax
@@ -146,6 +160,7 @@ export default function Gallery() {
         fone={"./paralax_1.jpg"}
         to={"/"}
       />
+      <div ref={containerRef}></div>
       <div className={styles.container}>
         <div className={styles.block_header}>
           <Tegs
@@ -163,7 +178,8 @@ export default function Gallery() {
         {!isLoader ? (
           <Cards collections={collections} openModal={openModal} />
         ) : (
-          <p className={styles.is_loader}>Идет загрузка...</p>
+          <div className={styles.wrapper_loader}><Loader /></div>
+          
         )}
 
         <ShowPhoto
@@ -175,7 +191,7 @@ export default function Gallery() {
         />
         {<p className={styles.error_text}>{errorAuth}</p>}
         {!isLoader && collections.length > 0 ? (
-          <Pagination page={page} setPageCount={setPageCount} />
+          <Pagination page={page} handlePageClick={handlePageClick} />
         ) : (
           ""
         )}

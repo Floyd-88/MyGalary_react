@@ -11,7 +11,7 @@ export default function Blog() {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const myRef = useRef();
-  const [lastAnimatedIndex, setLastAnimatedIndex] = useState(-1); 
+  const [lastAnimatedIndex, setLastAnimatedIndex] = useState(-1);
 
   useEffect(() => {
     const loadItems = async () => {
@@ -22,14 +22,13 @@ export default function Blog() {
         );
         const data = await response.json();
         if (data.items.length > 0) {
-          setMeta(data.meta)
+          setMeta(data.meta);
           if (page === 1) {
             setCards(data.items); // Очистка списка карточек перед загрузкой новых
           } else {
-            setCards(prevItems => [...prevItems, ...data.items]);
+            setCards((prevItems) => [...prevItems, ...data.items]);
           }
-          setPage(prevPage => prevPage + 1);
-
+          setPage((prevPage) => prevPage + 1);
         }
       } catch (err) {
         console.log(err);
@@ -60,7 +59,7 @@ export default function Blog() {
   useEffect(() => {
     if (lastAnimatedIndex < cards.length - 1) {
       const timeoutId = setTimeout(() => {
-        setLastAnimatedIndex(prevIndex => prevIndex + 1);
+        setLastAnimatedIndex((prevIndex) => prevIndex + 1);
       }, 200); // Задержка между анимациями карточек
       return () => clearTimeout(timeoutId);
     }
@@ -79,7 +78,9 @@ export default function Blog() {
         {cards.map((card, index) => (
           <div
             key={card.id}
-            className={`${styles.card} ${index <= lastAnimatedIndex ? styles.fadeIn : ""}`}
+            className={`${styles.card} ${
+              index <= lastAnimatedIndex ? styles.fadeIn : ""
+            }`}
           >
             <img className={styles.photo} src={card.photo} alt="photo" />
 
@@ -132,7 +133,7 @@ export default function Blog() {
         ))}
       </div>
       <div className={styles.observe} ref={myRef}>
-      {loading && <Loader/>}
+        {loading && <Loader />}
       </div>
     </>
   );

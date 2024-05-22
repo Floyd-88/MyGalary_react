@@ -7,7 +7,7 @@ export default function Cards({collections, openModal}) {
       <div className={styles.block_cards}>
         {collections
         .map((collection, index) => (
-        <Card key={index} collection={collection} openModal={openModal}/>
+        <Card key={index} collection={collection} openModal={openModal} index={index}/>
         ))}
 
       </div>
