@@ -16,19 +16,21 @@ export default function About() {
           <img src="./public/designer_photo.png" alt="photo" />
         </div>
         <div className={styles.wrapper_info}>
-          <p className={styles.title}>Обо мне</p>
+          <p className={styles.title}>About</p>
           <p className={styles.info}>
-            The Big Oxmox advised her not to do so, because there were thousands
-            of bad Commas, wild Question Marks and devious Semikoli, but the
-            Little Blind Text didn’t listen. She packed her seven versalia, put
-            her initial into the belt and made herself on the way.
+            Наш сайт галереи - это уютное пространство для хранения ваших личных
+            фотографий. Здесь вы можете сохранять свои снимки, наслаждаться ими
+            и управлять своим творчеством. Мы предоставляем простой и удобный
+            способ организации вашей коллекции личных фотографий, обеспечивая
+            легкий доступ к вашим изображениям.
           </p>
+          <br />
           <p className={styles.info}>
-            When she reached the first hills of the Italic Mountains, she had a
-            last view back on the skyline of her hometown Bookmarksgrove, the
-            headline of Alphabet Village and the subline of her own road, the
-            Line Lane. Pityful a rethoric question ran over her cheek, then she
-            continued her way.
+            Мы стремимся сделать ваше пребывание на нашем сайте максимально
+            приятным и удобным. Наша галерея разработана с учетом интуитивно понятного интерфейса. 
+            Присоединяйтесь к нашей галерее уже сегодня, чтобы начать
+            создавать, сохранять и наслаждаться вашими личными фотографиями в
+            удобном пространстве!
           </p>
         </div>
       </div>

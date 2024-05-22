@@ -1,8 +1,104 @@
 import styles from "../css/contact.module.css";
 
 import Paralax from "../components/Paralax";
+import { useState } from "react";
+import { isValidEmail } from "../validator.js";
+import DOMPurify from "dompurify";
 
 export default function Contact() {
+  const [formContact, setFormContact] = useState({
+    name: "",
+    lastName: "",
+    email: "",
+    text: "",
+  });
+
+  const [formContactErrors, setFormContactErrors] = useState({
+    name: true,
+    lastName: true,
+    email: true,
+    text: true,
+  });
+
+  function sanitizeInput(value) {
+    return DOMPurify.sanitize(value);
+  }
+
+  function handleInputChange(e) {
+    const { name, value } = e.target;
+    const sanitizedValue = sanitizeInput(value);
+
+    setFormContact((prevState) => ({
+      ...prevState,
+      [name]: sanitizedValue,
+    }));
+
+    let error = "";
+
+    if (name === "name" && value.length < 2) {
+      error = "Имя должно содержать минимум 2 буквы";
+    } else if (name === "lastName" && value.length < 2) {
+      error = "Фамилия должна содержать минимум 2 буквы";
+    } else if (name === "email" && !isValidEmail(value)) {
+      error = "Введите корректный email";
+    } else if (name === "text" && value.length < 5) {
+      error = "Текст должен содержать минимум 5 символов";
+    }
+
+    setFormContactErrors((prevState) => ({
+      ...prevState,
+      [name]: error,
+    }));
+  }
+
+  function formReset() {
+    setFormContact({
+      name: "",
+      lastName: "",
+      email: "",
+      text: "",
+    });
+
+    setFormContactErrors({
+      name: true,
+      lastName: true,
+      email: true,
+      text: true,
+    })
+  }
+
+  function handleSubmit() {
+    const trimmedFormContact = {
+      name: formContact.name.trim(),
+      lastName: formContact.lastName.trim(),
+      email: formContact.email.trim(),
+      text: formContact.text.trim(),
+    };
+
+    fetch("https://formspree.io/f/xvoenkne", {
+      method: "POST",
+      body: JSON.stringify(trimmedFormContact),
+      headers: {
+          'Accept': 'application/json'
+      }
+    }).then(response => {
+      if (response.ok) {
+        console.log("Thanks for your submission!");
+        formReset()
+      } else {
+        response.json().then(data => {
+          if (Object.hasOwn(data, 'errors')) {
+            console.log(data["errors"].map(error => error["message"]).join(", "))
+          } else {
+            console.log("Oops! There was a problem submitting your form")
+          }
+        })
+      }
+    }).catch((error) => {
+      console.log("Oops! There was a problem submitting your form", error)
+    });
+  }
+
   return (
     <>
       <Paralax
@@ -12,60 +108,106 @@ export default function Contact() {
         to={"/gallery"}
       />
       <div className={styles.wrapper_forms}>
-        <form action="">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
           <h3 className={styles.form_title}>Обратная связь</h3>
           <div className={styles.form_name}>
+            <div className={styles.wrapper_input}>
+              <input
+                type="text"
+                className={styles.form_input}
+                placeholder="Ваше имя"
+                name="name"
+                value={formContact["name"]}
+                onChange={handleInputChange}
+              />
+              {formContactErrors["name"] && (
+                <p className={styles.error_text}>{formContactErrors["name"]}</p>
+              )}
+            </div>
+
+            <div className={styles.wrapper_input}>
+              <input
+                type="text"
+                className={styles.form_input}
+                placeholder="Ваша Фамилия"
+                name="lastName"
+                value={formContact["lastName"]}
+                onChange={handleInputChange}
+              />
+              {formContactErrors["lastName"] && (
+                <p className={styles.error_text}>
+                  {formContactErrors["lastName"]}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className={styles.wrapper_input}>
             <input
-              type="text"
+              type="email"
               className={styles.form_input}
-              placeholder="Ваше имя"
+              placeholder="Ваш адрес электронной почты"
+              name="email"
+              value={formContact["email"]}
+              onChange={handleInputChange}
             />
-            <input
-              type="text"
-              className={styles.form_input}
-              placeholder="Ваша Фамилия"
-            />
+            {formContactErrors["email"] && (
+              <p className={styles.error_text}>{formContactErrors["email"]}</p>
+            )}
+          </div>
+
+          <div className={styles.wrapper_input}>
+            <textarea
+              name="text"
+              className={styles.form_text}
+              placeholder="Текст сообщения"
+              value={formContact["text"]}
+              onChange={handleInputChange}
+            ></textarea>
+            {formContactErrors["text"] && (
+              <p className={styles.error_text}>{formContactErrors["text"]}</p>
+            )}
           </div>
 
           <input
-            type="email"
-            className={styles.form_input}
-            placeholder="Ваш адрес электронной почты"
+            disabled={Object.values(formContactErrors).some(
+              (formContactError) => formContactError
+            )}
+            className={styles.form_btn}
+            type="submit"
+            value="Отправить"
           />
-          <textarea
-            name=""
-            className={styles.form_text}
-            id=""
-            placeholder="Текст сообщения"
-          ></textarea>
-          <input className={styles.form_btn} type="button" value="Отправить" />
         </form>
 
         <div className={styles.contacts}>
-        <h3 className={styles.form_title}>Контактные данные</h3>
+          <h3 className={styles.form_title}>Контактные данные</h3>
 
           <div className={styles.contacts_items}>
             <div className={styles.wrapper_address}>
               <div className={styles.address}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-                />
-              </svg>
-              ул. Ленина 127, п.1
-            </div>
-            <p>г. Москва, 355000</p>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+                  />
+                </svg>
+                ул. Ленина 127, п.1
               </div>
-  
+              <p>г. Москва, 355000</p>
+            </div>
           </div>
 
           <div className={styles.contacts_items}>

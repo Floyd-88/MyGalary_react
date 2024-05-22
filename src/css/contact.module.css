@@ -29,7 +29,6 @@ form {
   width: 100%;
   padding: 10px;
   height: 50px;
-  margin-bottom: 20px;
   font-size: 15px;
   color: rgb(110, 109, 109);
 
@@ -47,12 +46,11 @@ form {
 
 .form_text {
   height: 250px;
-  margin-bottom: 20px;
   padding: 10px;
   font-size: 15px;
   color: rgb(110, 109, 109);
   border: none;
-
+  width: 100%;
   -webkit-box-shadow: 2px 3px 6px 2px rgba(34, 60, 80, 0.41);
   -moz-box-shadow: 2px 3px 6px 2px rgba(34, 60, 80, 0.41);
   box-shadow: 2px 3px 6px 2px rgba(34, 60, 80, 0.41);
@@ -110,4 +108,26 @@ form {
   height: 30px;
   flex-shrink: 0;
   margin-right: 5px;
+}
+
+.error_text {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #EF4444;
+  text-align: left;
+  margin-top: 3px;
+}
+
+.wrapper_input {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.form_btn:disabled {
+  background-color: #bababe;
+  cursor: auto;
+
+}
+.form_btn:disabled:hover {
+transform: scale(1);
 }
