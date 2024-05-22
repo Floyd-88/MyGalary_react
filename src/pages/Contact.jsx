@@ -3,7 +3,8 @@ import styles from "../css/contact.module.css";
 import Paralax from "../components/Paralax";
 import { useState } from "react";
 import { isValidEmail } from "../validator.js";
-import DOMPurify from "dompurify";
+import {sanitizeInput} from "../validator.js"
+
 
 export default function Contact() {
   const [formContact, setFormContact] = useState({
@@ -19,10 +20,6 @@ export default function Contact() {
     email: true,
     text: true,
   });
-
-  function sanitizeInput(value) {
-    return DOMPurify.sanitize(value);
-  }
 
   function handleInputChange(e) {
     const { name, value } = e.target;

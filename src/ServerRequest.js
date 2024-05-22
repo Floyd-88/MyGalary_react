@@ -9,9 +9,9 @@ export async function registerUser(data) {
   }
   // Подготовка тела запроса
   let body = JSON.stringify({
-    name: data.name,
-    email: data.email,
-    password: data.password,
+    name: data.name.trim(),
+    email: data.email.trim(),
+    password: data.password.trim(),
   });
 
   // Отправка запроса
@@ -46,8 +46,8 @@ export async function authorizationUser(data) {
     return;
   }
   let body = JSON.stringify({
-    email: data.email,
-    password: data.password,
+    email: data.email.trim(),
+    password: data.password.trim(),
   });
 
   const response = await fetch(AUTH_URL, {

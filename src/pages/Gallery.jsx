@@ -28,8 +28,9 @@ export default function Gallery() {
 
   const [errorAuth, setErrorAuth] = useState("");
   const [errorAuthRemove, setErrorAuthRemove] = useState("");
-
   const containerRef = useRef(null);
+
+  const [isFirstRender, setIsFirstRender] = useState(false);
 
   const openModal = (photo) => {
     setSelectedPhoto(photo);
@@ -48,8 +49,14 @@ export default function Gallery() {
       setIsLoader(true);
       try {
         const url = token
-          ? `${PHOTOS_URL}?photos=https*&userID=${user?.id}&sortBy=-id&page=${pageCount}&limit=8&category=${+activeCategorys !== 0 ? activeCategorys : "*"}&name=*${searchCollections}*`
-          : `${TEST_PHOTOS_URL}?photos=https*&userID=*&sortBy=-id&page=${pageCount}&limit=8&category=${+activeCategorys !== 0 ? activeCategorys : "*"}&name=*${searchCollections}*`;
+          ? `${PHOTOS_URL}?photos=https*&userID=${
+              user?.id
+            }&sortBy=-id&page=${pageCount}&limit=8&category=${
+              +activeCategorys !== 0 ? activeCategorys : "*"
+            }&name=*${searchCollections}*`
+          : `${TEST_PHOTOS_URL}?photos=https*&userID=*&sortBy=-id&page=${pageCount}&limit=8&category=${
+              +activeCategorys !== 0 ? activeCategorys : "*"
+            }&name=*${searchCollections}*`;
 
         const headers = token ? { Authorization: "Bearer " + token } : {};
 
@@ -67,12 +74,22 @@ export default function Gallery() {
         if (data.items && data.items.length > 0) {
           setPage(data.meta);
           setCollections(data.items);
+
+          if (isFirstRender) {
+            setTimeout(() => {
+              window.scrollTo({
+                top: containerRef.current.offsetTop,
+                behavior: "smooth",
+              });
+            }, 100);
+          }
         }
       } catch (error) {
         console.error("Ошибка при выполнении запроса:", error);
         setErrorAuth("Возникли проблемы с сервером, повторите попытку позже");
       } finally {
         setIsLoader(false);
+        setIsFirstRender(true);
       }
     }
 
@@ -82,7 +99,7 @@ export default function Gallery() {
       setErrorAuth("");
     };
   }, [activeCategorys, pageCount, searchCollections, token, user]);
-  
+
   useEffect(() => {
     async function fetchCategories() {
       try {
@@ -143,13 +160,6 @@ export default function Gallery() {
 
   const handlePageClick = (pageNumber) => {
     setPageCount(pageNumber);
-    setTimeout(() => {
-      window.scrollTo({
-        top: containerRef.current.offsetTop,
-        behavior: 'smooth',
-      });
-
-    }, 0)
   };
 
   return (
@@ -178,8 +188,9 @@ export default function Gallery() {
         {!isLoader ? (
           <Cards collections={collections} openModal={openModal} />
         ) : (
-          <div className={styles.wrapper_loader}><Loader /></div>
-          
+          <div className={styles.wrapper_loader}>
+            <Loader />
+          </div>
         )}
 
         <ShowPhoto

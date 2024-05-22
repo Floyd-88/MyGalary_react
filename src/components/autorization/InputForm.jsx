@@ -1,5 +1,6 @@
 import styles from "../../css/inputForm.module.css";
 import { isValidEmail } from "../../validator.js";
+import {sanitizeInput} from "../../validator.js"
 
 export default function InputForm({
   type,
@@ -11,10 +12,11 @@ export default function InputForm({
 }) {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    const sanitizedValue = sanitizeInput(value);
 
     props.setFormData((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: sanitizedValue,
     }));
 
     setFormErrors((prevState) => ({
