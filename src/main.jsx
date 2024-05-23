@@ -14,7 +14,7 @@ import Blog from "./pages/Blog.jsx";
 import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
 import Profile from "./pages/Profile.jsx";
-
+import ProtectedRoute from "./ProtectedRoute.jsx";
 
 const router = createBrowserRouter([
   {
@@ -53,11 +53,13 @@ const router = createBrowserRouter([
       },
       {
         path: "profile",
-        element: <Profile />,
+        element: <ProtectedRoute element={<Profile />} />,
       },
     ],
   },
 ]);
+
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
