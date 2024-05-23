@@ -13,6 +13,7 @@ import Upload from "./pages/Upload.jsx";
 import Blog from "./pages/Blog.jsx";
 import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
+import Profile from "./pages/Profile.jsx";
 
 
 const router = createBrowserRouter([
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: "contact",
         element: <Contact />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
       },
     ],
   },

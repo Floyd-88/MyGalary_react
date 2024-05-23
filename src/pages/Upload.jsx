@@ -1,4 +1,5 @@
 import styles from "../css/upload.module.css";
+import { useOutletContext } from "react-router-dom";
 
 import Paralax from "../components/Paralax";
 import { useRef, useState } from "react";
@@ -9,25 +10,22 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import { useOutletContext } from "react-router-dom";
+import { fetchCategories } from "../ServerRequest";
 
 const storage = getStorage();
-
-// const token = JSON.parse(localStorage.getItem("token_gallery"))
-// const user = JSON.parse(localStorage.getItem("user_gallery"))
 
 export default function Upload() {
   const [isSelect, setIsSelect] = useState(false);
   const [selectCat, setSelectCat] = useState("");
   const [selectIndex, setSelectIndex] = useState();
-
   const [files, setFiles] = useState([]);
   const [btnDisabled, setBtnDisabled] = useState(false);
+  const [errorUpload, setErrorUpload] = useState("");
 
   const photos = useRef(null);
   const addBtn = useRef(null);
-
-  const { setShowAuto, user, token } = useOutletContext();
+  const { setShowAuto, user, token, setCategorys, categorys } =
+    useOutletContext();
 
   let photosCollection = {
     category: selectIndex,
@@ -42,23 +40,31 @@ export default function Upload() {
   };
 
   function newPhoto() {
-    if(user.id) {
+    if (user.id) {
       setIsSelect(true);
       setSelectCat("");
       setFiles([]);
+
+      // useEffect(() => {
+      fetchCategories()
+        .then((data) => {
+          setCategorys(data);
+        })
+        .catch((error) => {
+          console.error("Ошибка запроса:", error);
+        });
+      // }, []);
     } else {
-      setShowAuto("Войти")
+      setShowAuto("Войти");
     }
   }
 
   function handleCLickUploadPhoto() {
-    //сбрасываем загрузчик что бы можно было выбрать тот же файл еще раз
-    // if (photos.current) {
-    //   photos.current = null;
-    // }
+    // Изменение: Используем метод сброса значений для `input`
+    photos.current.value = null;
     setFiles([]);
     setBtnDisabled(false);
-
+    setErrorUpload("");
     //при клике на кнопку срабатывает инпут
     photos.current.click();
   }
@@ -76,7 +82,7 @@ export default function Upload() {
     }
 
     if (photos.current.files.length > 4) {
-      console.log("Вы не можете загрузить больше 4 фотографий за один раз");
+      setErrorUpload("Вы не можете загрузить больше 4 фотографий за один раз");
       photoFiles = Array.prototype.slice.call(photos.current.files, 0, 4);
     } else {
       photoFiles = photos.current.files;
@@ -86,11 +92,11 @@ export default function Upload() {
 
     filesArray.map((file) => {
       if (!allowedTypes.includes(file.type)) {
-        console.log("Формат одного из выбранных файлов не поддерживается");
+        setErrorUpload("Формат одного из выбранных файлов не поддерживается");
         filesArray.filter((elem) => elem.name != file.name);
         return;
       } else if (file.size > 5000000) {
-        console.log("Размер одной из фоторгафий превышает допустимый");
+        setErrorUpload("Размер одной из фоторгафий превышает допустимый");
         filesArray.filter((elem) => elem.name != file.name);
         return;
       } else {
@@ -170,8 +176,6 @@ export default function Upload() {
               }
             },
             (error) => {
-              // A full list of error codes is available at
-              // https://firebase.google.com/docs/storage/web/handle-errors
               switch (error.code) {
                 case "storage/unauthorized":
                   // User doesn't have permission to access the object
@@ -202,16 +206,17 @@ export default function Upload() {
         .then(() => {
           // Все загрузки завершены успешно, выполняем нужное действие
           saveCatologPhotoServer()
-          .then((responseData) => {
-            console.log('Ответ от сервера:', responseData);
-          })
-          .catch((error) => {
-            console.error('Ошибка при отправке данных:', error);
-          });
-          
+            .then((responseData) => {
+              console.log("Ответ от сервера:", responseData);
+            })
+            .catch((error) => {
+              setErrorUpload("Произошла ошибка при отправке данных, попробуйте еще раз")
+              console.error("Ошибка при отправке данных:", error);
+            });
         })
         .catch((error) => {
           // Обрабатываем ошибку, если какая-либо загрузка не удалась
+          setErrorUpload("Произошла ошибка при загрузки фотографий, попробуйте еще раз")
           console.error("Ошибка при загрузке файлов:", error);
         });
     } catch (error) {
@@ -221,31 +226,31 @@ export default function Upload() {
 
   async function saveCatologPhotoServer() {
     if (photosCollection.photos.length === 0) {
-      throw new Error('Отсутствуют данные для отправки');
+      throw new Error("Отсутствуют данные для отправки");
     }
     try {
       photosCollection.userID = user?.id || "";
       const res = await fetch(
-        `https://afbf733ef0b7e113.mokky.dev/photos_collections`, {
-          method: 'POST',
+        `https://afbf733ef0b7e113.mokky.dev/photos_collections`,
+        {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
-            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
           },
-          body: JSON.stringify(photosCollection)
+          body: JSON.stringify(photosCollection),
         }
-      )
+      );
       if (!res.ok) {
         throw new Error(`Ошибка HTTP: ${res.status}`);
       } else {
-        console.log('Success');
+        console.log("Success");
         return await res.json();
-      } 
-    } catch(err) {
-      console.error('Ошибка при выполнении POST-запроса:', err.message);
+      }
+    } catch (err) {
+      console.error("Ошибка при выполнении POST-запроса:", err.message);
       throw err;
     }
-
   }
 
   return (
@@ -258,14 +263,16 @@ export default function Upload() {
         to={"/gallery"}
       >
         <div className={styles.wrapper_upload_photo}>
-          {<button
-            className={styles.btn_next_gal}
-            onClick={() => {
-              newPhoto()
-            }}
-          >
-            New Photo
-          </button>}
+          {
+            <button
+              className={styles.btn_next_gal}
+              onClick={() => {
+                newPhoto();
+              }}
+            >
+              New Photo
+            </button>
+          }
 
           <div className={styles.header_btns_load_photo}>
             {isSelect && (
@@ -286,163 +293,15 @@ export default function Upload() {
                   >
                     Выбрать категорию
                   </option>
-
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Абстрактные/Графика/3D"
-                  >
-                    Абстрактные/Графика/3D
-                  </option>
-                  <option className={styles.select_cat_photo_opt} value="Аниме">
-                    Аниме
-                  </option>
-                  <option className={styles.select_cat_photo_opt} value="Арты">
-                    Арты
-                  </option>
-                  <option className={styles.select_cat_photo_opt} value="Город">
-                    Город
-                  </option>
-                  <option className={styles.select_cat_photo_opt} value="Горы">
-                    Горы
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Девушки"
-                  >
-                    Девушки
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Друзья"
-                  >
-                    Друзья
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Животные"
-                  >
-                    Животные
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Компьютер"
-                  >
-                    Компьютер
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Космос"
-                  >
-                    Космос
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Любовь"
-                  >
-                    Любовь
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Машины"
-                  >
-                    Машины
-                  </option>
-                  <option className={styles.select_cat_photo_opt} value="Море">
-                    Море
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Музыка"
-                  >
-                    Музыка
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Мультфильмы"
-                  >
-                    Мультфильмы
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Отношения"
-                  >
-                    Отношения
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Пейзажи"
-                  >
-                    Пейзажи
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Персонажи"
-                  >
-                    Персонажи
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Приколы"
-                  >
-                    Приколы
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Природа"
-                  >
-                    Природа
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Развлечение"
-                  >
-                    Развлечение
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Разные"
-                  >
-                    Разные
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Романтика"
-                  >
-                    Романтика
-                  </option>
-                  <option className={styles.select_cat_photo_opt} value="Семья">
-                    Семья
-                  </option>
-                  <option className={styles.select_cat_photo_opt} value="Спорт">
-                    Спорт
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Страшные"
-                  >
-                    Страшные
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Фильмы"
-                  >
-                    Фильмы
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Фэнтези"
-                  >
-                    Фэнтези
-                  </option>
-                  <option className={styles.select_cat_photo_opt} value="Цветы">
-                    Цветы
-                  </option>
-                  <option
-                    className={styles.select_cat_photo_opt}
-                    value="Черно-белые"
-                  >
-                    Черно-белые
-                  </option>
+                  {categorys.map((cat) => (
+                    +cat.category !== 0 && <option
+                      key={cat.category}
+                      className={styles.select_cat_photo_opt}
+                      value={cat.name}
+                    >
+                      {cat.name}
+                    </option>
+                  ))}           
                 </select>
               </div>
             )}
@@ -469,6 +328,7 @@ export default function Upload() {
             )}
           </div>
         </div>
+        <p>{errorUpload ? errorUpload : ""}</p>
       </Paralax>
 
       {files.length > 0 && (

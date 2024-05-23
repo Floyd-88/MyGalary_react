@@ -17,7 +17,7 @@
   gap: 30px;
 }
 
-a {
+.block_nav_items a {
   text-decoration: none;
   font-weight: 600;
   color: white;
@@ -25,7 +25,7 @@ a {
   text-shadow: 0 0 15px rgba(255, 255, 255, 0.5),
     0 0 10px rgba(255, 255, 255, 0.5);
 }
-a:after {
+.block_nav_items a:after {
   display: block; /*превращаем его в блочный элемент*/
   content: ""; /*контента в данном блоке не будет поэтому в кавычках ничего не ставим*/
   height: 3px; /*задаём высоту линии*/
@@ -50,7 +50,7 @@ svg {
   margin-right: 20px;
 }
 
-.wrapper_login button{
+.login{
   background: none;
     border: none;
     color: white;
@@ -60,7 +60,7 @@ svg {
     opacity: .7;
 }
 
-.wrapper_login button:hover {
+.login:hover {
 scale: 1.1;
 }
 
@@ -80,10 +80,30 @@ scale: 1.1;
     font-size: 14px;
 }
 
-.text_welcome span {
-font-weight: 600;
+.text_welcome a {
+  text-decoration: none;
+  font-weight: 600;
+  color: white;
+  border-bottom: none;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.5),
+    0 0 10px rgba(255, 255, 255, 0.5);
+    font-size: 16px;
 }
 
-.exit {
+.text_welcome a:hover {
+  color: rgb(218, 216, 216);
+  }
 
+/* .exit {
+  background: none;
+    border: none;
+    color: white;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: .7;
 }
+
+.exit:hover {
+  scale: 1.1;
+  } */

@@ -1,6 +1,6 @@
 import styles from "../../css/inputForm.module.css";
-import { isValidEmail } from "../../validator.js";
-import {sanitizeInput} from "../../validator.js"
+import { isValidEmail } from "../../validators/validator.js";
+import {sanitizeInput} from "../../validators/validator.js"
 
 export default function InputForm({
   type,

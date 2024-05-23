@@ -1,5 +1,4 @@
 import styles from "../css/blog.module.css";
-
 import Paralax from "../components/Paralax";
 import { useEffect, useRef, useState } from "react";
 import Loader from "../components/Loader";
@@ -7,7 +6,6 @@ import Loader from "../components/Loader";
 export default function Blog() {
   const [cards, setCards] = useState([]);
   const [meta, setMeta] = useState({});
-
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const myRef = useRef();
@@ -20,6 +18,10 @@ export default function Blog() {
         const response = await fetch(
           `https://afbf733ef0b7e113.mokky.dev/blog?limit=3&page=${page}`
         );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+
         const data = await response.json();
         if (data.items.length > 0) {
           setMeta(data.meta);
@@ -30,8 +32,8 @@ export default function Blog() {
           }
           setPage((prevPage) => prevPage + 1);
         }
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
       setLoading(false);
     };
@@ -54,7 +56,7 @@ export default function Blog() {
         observer.unobserve(currentRef);
       }
     };
-  }, [page, loading]);
+  }, [page, loading, meta.remaining_count]);
 
   useEffect(() => {
     if (lastAnimatedIndex < cards.length - 1) {

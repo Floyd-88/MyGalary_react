@@ -1,0 +1,92 @@
+.userProfile {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 120px;
+    margin-bottom: 20px;
+    background: #ccc;
+    color: black;
+  }
+
+  h2 {
+    margin-bottom: 5px;
+    text-align: center;
+  }
+  
+  .errorMessage {
+    color: red;
+  }
+  
+  .profileForm {
+    margin-bottom: 20px;
+  }
+  
+  .formGroup {
+    margin-bottom: 10px;
+  }
+  
+  .formLabel {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .formInput {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .saveButton {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+
+  .saveButton:hover {
+    background-color: #0051a8;
+  }
+
+  .saveButton:disabled {
+    background-color: #bababe;
+    cursor: auto;
+  }
+  
+  .wrapper_deleteButton {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .deleteButton {
+    text-align: center;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 20px;
+    cursor: pointer;
+    opacity: .7;
+  }
+  .deleteButton:hover {
+
+    opacity: 1;
+  }
+  .success {
+    font-size: 15px;
+    color: green;
+    padding-bottom: 5px;
+    text-align: center;
+  }
+
+  .error_text {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #EF4444;
+    text-align: left;
+    margin-top: 3px;
+  }

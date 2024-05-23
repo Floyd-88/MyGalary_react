@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import Cards from "../components/Cards";
-import Pagination from "../components/Pagination";
+import MemoizedPagination from "../components/Pagination";
 import Search from "../components/Search";
 import Tegs from "../components/Tegs";
 import styles from "../css/gallery.module.css";
@@ -10,38 +10,24 @@ import { useOutletContext } from "react-router-dom";
 import { PHOTOS_URL, TEST_PHOTOS_URL } from "../constantsUrlAPI";
 import ShowPhoto from "../components/ShowPhoto";
 import Loader from "../components/Loader";
+import { fetchCategories } from "../ServerRequest";
 
 export default function Gallery() {
   const [collections, setCollections] = useState([]);
-  const [categorys, setCategorys] = useState([]);
   const [activeCategorys, setActiveCategorys] = useState(0);
   const [searchCollections, setSearchCollections] = useState("");
   const [page, setPage] = useState({});
   const [pageCount, setPageCount] = useState(1);
   const [isLoader, setIsLoader] = useState(false);
-
-  const { setShowAuto, user } = useOutletContext();
-  const token = JSON.parse(localStorage.getItem("token_gallery"));
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
-
   const [errorAuth, setErrorAuth] = useState("");
   const [errorAuthRemove, setErrorAuthRemove] = useState("");
-  const containerRef = useRef(null);
-
   const [isFirstRender, setIsFirstRender] = useState(false);
 
-  const openModal = (photo) => {
-    setSelectedPhoto(photo);
-    setIsModalOpen(true);
-    setErrorAuth("");
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedPhoto(null);
-  };
+  const { setShowAuto, user, setCategorys, categorys } = useOutletContext();
+  const token = JSON.parse(localStorage.getItem("token_gallery"));
+  const containerRef = useRef(null);
 
   useEffect(() => {
     if (token === undefined || user === undefined) return;
@@ -71,7 +57,7 @@ export default function Gallery() {
 
         const data = await res.json();
 
-        if (data.items && data.items.length > 0) {
+        if (data.items) {
           setPage(data.meta);
           setCollections(data.items);
 
@@ -100,26 +86,27 @@ export default function Gallery() {
     };
   }, [activeCategorys, pageCount, searchCollections, token, user]);
 
-  useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const response = await fetch(
-          "https://afbf733ef0b7e113.mokky.dev/categorys"
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        if (data.length > 0) {
-          setCategorys(data);
-        }
-      } catch (error) {
-        console.error("Ошибка при выполнении запроса:", error);
-      }
-    }
 
-    fetchCategories();
+  useEffect(() => {
+    fetchCategories()
+    .then((data) => {
+      setCategorys(data);
+    })
+    .catch((error) => {
+      console.error("Ошибка запроса:", error);
+    });
   }, []);
+
+  const openModal = (photo) => {
+    setSelectedPhoto(photo);
+    setIsModalOpen(true);
+    setErrorAuth("");
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedPhoto(null);
+  };
 
   async function removePhoto() {
     const newCollection = selectedPhoto.collection.photos;
@@ -202,16 +189,16 @@ export default function Gallery() {
         />
         {<p className={styles.error_text}>{errorAuth}</p>}
         {!isLoader && collections.length > 0 ? (
-          <Pagination page={page} handlePageClick={handlePageClick} />
+          <MemoizedPagination page={page} handlePageClick={handlePageClick} />
         ) : (
           ""
         )}
-        {!user.id ? (
+        {!user.id && (
           <p className={styles.is_loader}>
             Для создания своей собственной галереи Вам необходимо{" "}
             <span onClick={() => setShowAuto("Войти")}>авторизоваться</span>!
           </p>
-        ) : (
+        )} 
           <p
             className={`${styles.is_loader} ${
               !(collections.length === 0 && !isLoader)
@@ -221,7 +208,6 @@ export default function Gallery() {
           >
             Ничего не найдено
           </p>
-        )}
       </div>
     </>
   );

@@ -13,7 +13,7 @@ export default function Form({
   setFormErrors,
   props,
 }) {
-  const [errorAuth, setErrorAuth] = useState("")
+  const [errorAuth, setErrorAuth] = useState("");
 
   function resetFormData() {
     props.setFormData({
@@ -21,9 +21,9 @@ export default function Form({
       email: "",
       password: "",
     });
-    setFormErrors((prev) => prev.map(elem => elem ? elem = true : elem));
+    setFormErrors((prev) => prev.map((elem) => (elem ? (elem = true) : elem)));
 
-    setErrorAuth("")
+    setErrorAuth("");
   }
 
   const handleSubmit = (e) => {
@@ -38,37 +38,42 @@ export default function Form({
         registerUser(props.formData)
           .then((data) => {
             console.log("Успешный ответ:", data);
-            resetFormData()
-            props.setShowAuto("")
-            props.setUser(data.data)
-            props.setToken(data.token)
+            resetFormData();
+            props.setShowAuto("");
+            props.setUser(data.data);
+            props.setToken(data.token);
           })
           .catch((error) => {
             console.error("Ошибка запроса:", error);
             if (error?.message === "RESOURCE_USER_ALREADY_EXISTS") {
               setErrorAuth("Пользователь с такой почтой уже зарегистрирован");
-            }
-            else {
-              setErrorAuth("Возникли проблемы с сервером, повторите попытку позже")
+            } else {
+              setErrorAuth(
+                "Возникли проблемы с сервером, повторите попытку позже"
+              );
             }
           });
       } else {
         authorizationUser(props.formData)
-        .then((data) => {
-          console.log("Успешный ответ:", data);
-          resetFormData()
-          props.setShowAuto("")
-          props.setUser(data.data)
-          props.setToken(data.token)
-        })
-        .catch((error) => {
-          console.error("Ошибка запроса:", error);
-          if(error?.message === 'RESOURCE_INVALID_LOGIN_OR_PASSWORD') {
-            setErrorAuth("Пользователя с таким логином или паролем не найдено")
-          } else {
-            setErrorAuth("Возникли проблемы с сервером, повторите попытку позже")
-          }
-        });
+          .then((data) => {
+            console.log("Успешный ответ:", data);
+            resetFormData();
+            props.setShowAuto("");
+            props.setUser(data.data);
+            props.setToken(data.token);
+          })
+          .catch((error) => {
+            console.error("Ошибка запроса:", error);
+            if (error?.message === "RESOURCE_INVALID_LOGIN_OR_PASSWORD") {
+              setErrorAuth(
+                "Пользователя с таким логином или паролем не найдено"
+              );
+            } else {
+              setErrorAuth(
+                "Возникли проблемы с сервером, повторите попытку позже"
+              );
+            }
+          });
       }
     } else {
       console.log("Форма содержит ошибки в полях ввода");

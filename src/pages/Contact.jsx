@@ -2,98 +2,56 @@ import styles from "../css/contact.module.css";
 
 import Paralax from "../components/Paralax";
 import { useState } from "react";
-import { isValidEmail } from "../validator.js";
-import {sanitizeInput} from "../validator.js"
-
+import { handleInputChange } from "../validators/formHandlers";
 
 export default function Contact() {
-  const [formContact, setFormContact] = useState({
+  const initialFormState = {
     name: "",
     lastName: "",
     email: "",
     text: "",
-  });
+  };
 
-  const [formContactErrors, setFormContactErrors] = useState({
-    name: true,
-    lastName: true,
-    email: true,
-    text: true,
-  });
-
-  function handleInputChange(e) {
-    const { name, value } = e.target;
-    const sanitizedValue = sanitizeInput(value);
-
-    setFormContact((prevState) => ({
-      ...prevState,
-      [name]: sanitizedValue,
-    }));
-
-    let error = "";
-
-    if (name === "name" && value.length < 2) {
-      error = "Имя должно содержать минимум 2 буквы";
-    } else if (name === "lastName" && value.length < 2) {
-      error = "Фамилия должна содержать минимум 2 буквы";
-    } else if (name === "email" && !isValidEmail(value)) {
-      error = "Введите корректный email";
-    } else if (name === "text" && value.length < 5) {
-      error = "Текст должен содержать минимум 5 символов";
-    }
-
-    setFormContactErrors((prevState) => ({
-      ...prevState,
-      [name]: error,
-    }));
-  }
+  const [formContact, setFormContact] = useState(initialFormState);
+  const [formContactErrors, setFormContactErrors] = useState({});
+  const [success, setSuccess] = useState("");
 
   function formReset() {
-    setFormContact({
-      name: "",
-      lastName: "",
-      email: "",
-      text: "",
-    });
-
-    setFormContactErrors({
-      name: true,
-      lastName: true,
-      email: true,
-      text: true,
-    })
+    setFormContact(initialFormState);
+    setFormContactErrors({});
   }
 
-  function handleSubmit() {
-    const trimmedFormContact = {
-      name: formContact.name.trim(),
-      lastName: formContact.lastName.trim(),
-      email: formContact.email.trim(),
-      text: formContact.text.trim(),
-    };
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    const trimmedFormContact = Object.fromEntries(
+      Object.entries(formContact).map(([key, value]) => [key, value.trim()])
+    );
 
     fetch("https://formspree.io/f/xvoenkne", {
       method: "POST",
       body: JSON.stringify(trimmedFormContact),
       headers: {
-          'Accept': 'application/json'
-      }
-    }).then(response => {
-      if (response.ok) {
-        console.log("Thanks for your submission!");
-        formReset()
-      } else {
-        response.json().then(data => {
-          if (Object.hasOwn(data, 'errors')) {
-            console.log(data["errors"].map(error => error["message"]).join(", "))
-          } else {
-            console.log("Oops! There was a problem submitting your form")
-          }
-        })
-      }
-    }).catch((error) => {
-      console.log("Oops! There was a problem submitting your form", error)
-    });
+        Accept: "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          setSuccess("Ваше сообщение отправлено!");
+          formReset();
+        } else {
+          response.json().then((data) => {
+            if (data.errors) {
+              console.log(data.errors.map((error) => error.message).join(", "));
+            } else {
+              console.log("Oops! There was a problem submitting your form");
+            }
+          });
+        }
+      })
+      .catch((error) => {
+        console.log("Oops! There was a problem submitting your form", error);
+      });
   }
 
   return (
@@ -105,13 +63,10 @@ export default function Contact() {
         to={"/gallery"}
       />
       <div className={styles.wrapper_forms}>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit();
-          }}
-        >
+        <form onSubmit={handleSubmit}>
           <h3 className={styles.form_title}>Обратная связь</h3>
+          {success && <p className={styles.success}>{success}</p>}
+
           <div className={styles.form_name}>
             <div className={styles.wrapper_input}>
               <input
@@ -120,7 +75,7 @@ export default function Contact() {
                 placeholder="Ваше имя"
                 name="name"
                 value={formContact["name"]}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e, setFormContact, setFormContactErrors)}
               />
               {formContactErrors["name"] && (
                 <p className={styles.error_text}>{formContactErrors["name"]}</p>
@@ -134,7 +89,7 @@ export default function Contact() {
                 placeholder="Ваша Фамилия"
                 name="lastName"
                 value={formContact["lastName"]}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e, setFormContact, setFormContactErrors)}
               />
               {formContactErrors["lastName"] && (
                 <p className={styles.error_text}>
@@ -151,7 +106,7 @@ export default function Contact() {
               placeholder="Ваш адрес электронной почты"
               name="email"
               value={formContact["email"]}
-              onChange={handleInputChange}
+              onChange={(e) => handleInputChange(e, setFormContact, setFormContactErrors)}
             />
             {formContactErrors["email"] && (
               <p className={styles.error_text}>{formContactErrors["email"]}</p>
@@ -164,7 +119,7 @@ export default function Contact() {
               className={styles.form_text}
               placeholder="Текст сообщения"
               value={formContact["text"]}
-              onChange={handleInputChange}
+              onChange={(e) => handleInputChange(e, setFormContact, setFormContactErrors)}
             ></textarea>
             {formContactErrors["text"] && (
               <p className={styles.error_text}>{formContactErrors["text"]}</p>
@@ -172,9 +127,13 @@ export default function Contact() {
           </div>
 
           <input
-            disabled={Object.values(formContactErrors).some(
-              (formContactError) => formContactError
-            )}
+            disabled={
+              !formContact.name ||
+              !formContact.lastName ||
+              !formContact.email ||
+              !formContact.text ||
+              Object.values(formContactErrors).some((error) => !!error)
+            }
             className={styles.form_btn}
             type="submit"
             value="Отправить"
@@ -222,7 +181,7 @@ export default function Contact() {
                 d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"
               />
             </svg>
-            <p>+7 905-404-27-30</p>
+            <p>+7 900-000-00-00</p>
           </div>
           <div className={styles.contacts_items}>
             <svg

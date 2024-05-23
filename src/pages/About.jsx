@@ -1,6 +1,6 @@
 import styles from "../css/about.module.css";
-
 import Paralax from "../components/Paralax";
+import designerPhoto from "/designer_photo.png";
 
 export default function About() {
   return (
@@ -13,7 +13,7 @@ export default function About() {
       />
       <div className={styles.wrapper_block}>
         <div className={styles.wrapper_photo}>
-          <img src="./public/designer_photo.png" alt="photo" />
+          <img src={designerPhoto} alt="Designer" />
         </div>
         <div className={styles.wrapper_info}>
           <p className={styles.title}>About</p>
@@ -27,10 +27,10 @@ export default function About() {
           <br />
           <p className={styles.info}>
             Мы стремимся сделать ваше пребывание на нашем сайте максимально
-            приятным и удобным. Наша галерея разработана с учетом интуитивно понятного интерфейса. 
-            Присоединяйтесь к нашей галерее уже сегодня, чтобы начать
-            создавать, сохранять и наслаждаться вашими личными фотографиями в
-            удобном пространстве!
+            приятным и удобным. Наша галерея разработана с учетом интуитивно
+            понятного интерфейса. Присоединяйтесь к нашей галерее уже сегодня,
+            чтобы начать создавать, сохранять и наслаждаться вашими личными
+            фотографиями в удобном пространстве!
           </p>
         </div>
       </div>

@@ -1,11 +1,11 @@
 import styles from "./css/app.module.css";
 
 import Header from "./components/Header";
-// import Gallery from "./pages/Gallery";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Autorization from "./components/autorization/Autorization";
 import Register from "./components/autorization/Register";
+import { exitUser } from "./ServerRequest";
 
 export default function App() {
   const [showAuto, setShowAuto] = useState("");
@@ -17,18 +17,37 @@ export default function App() {
 
   const [user, setUser] = useState({})
   const [token, setToken] = useState("")
+  const [categorys, setCategorys] = useState([]);
+
+  const navigate = useNavigate()
+
+
+  function changeStore() {
+    try {
+      const userStorage = JSON.parse(localStorage.getItem('user_gallery')) || {};
+      const tokenStorage = localStorage.getItem("token_gallery") || "";
+      setUser(userStorage);
+      setToken(tokenStorage);
+    } catch (error) {
+      console.error("Error parsing local storage data:", error);
+    }
+  }
 
   useEffect(() => {
-    const userStorage = JSON.parse(localStorage.getItem('user_gallery'));
-    const tokenStorage = JSON.parse(localStorage.getItem("token_gallery"))
-    if (userStorage && tokenStorage) {
-      setUser(userStorage);
-      setToken(tokenStorage)
-    } else {
-      setUser({});
-      setToken("")
-    }
+    changeStore()
   }, []);
+
+  function exit() {
+    exitUser();
+    setUser({});
+
+    setFormData({
+      name: "",
+      email: "",
+      password: "",
+    })
+    navigate("/");
+  }
 
 
   return (
@@ -55,8 +74,8 @@ export default function App() {
         />
       )}
 
-      <Header user={user} setUser={setUser} setShowAuto={setShowAuto} />
-      <Outlet context={{ setShowAuto, user, token }}/>
+      <Header user={user} setUser={setUser} setShowAuto={setShowAuto} setFormData={setFormData} exit={exit}/>
+      <Outlet context={{ setShowAuto, user, token, categorys, setCategorys, setFormData, changeStore, exit }}/>
     </>
   );
 }

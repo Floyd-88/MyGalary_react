@@ -1,21 +1,15 @@
 import { NavLink } from "react-router-dom";
 import styles from "../css/header.module.css";
 
-import {exitUser} from "../ServerRequest.js"
-
-export default function Header({setShowAuto, user, setUser}) {
-  function exit() {
-    exitUser()
-    setUser({})
-  }
+export default function Header({ setShowAuto, user, exit }) {
   return (
     <div className={styles.header}>
       {/* <h1 className={styles.title}>Photo gallery</h1> */}
       <ul className={styles.block_nav_items}>
-        <NavLink to={`/`}>HOME</NavLink>
-        <NavLink to={`gallery`}>GALLERY</NavLink>
-        <NavLink to={`services`}>SERVICES</NavLink>
-        <NavLink to={`upload`}>
+      <NavLink to="/">HOME</NavLink>
+        <NavLink to="/gallery">GALLERY</NavLink>
+        <NavLink to="/services">SERVICES</NavLink>
+        <NavLink to="/upload">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -37,19 +31,26 @@ export default function Header({setShowAuto, user, setUser}) {
           </svg>
           <p>UPLOAD</p>
         </NavLink>
-        <NavLink to={`blog`}>BLOG</NavLink>
-        <NavLink to={`about`}>ABOUT</NavLink>
-        <NavLink to={`contact`}>CONTACT</NavLink>
+        <NavLink to="/blog">BLOG</NavLink>
+        <NavLink to="/about">ABOUT</NavLink>
+        <NavLink to="/contact">CONTACT</NavLink>
+
       </ul>
-      {!user.name ? (<div className={styles.wrapper_login}>
-        <img src="./come.svg" alt="" />
-        <button onClick={() => setShowAuto("Войти")}>войти</button>
-      </div>) :
-      (<div className={styles.wrapper_exit}>
-        <p className={styles.text_welcome}>Hi, <span>{user?.name}</span></p>
-        <a className={styles.exit} href="" onClick={() => exit()}>выход</a>
-      </div>)
-      }
+      {!user.name ? (
+        <div className={styles.wrapper_login}>
+          <img src="./come.svg" alt="Login" />
+          <button className={styles.login} onClick={() => setShowAuto("Войти")}>войти</button>
+        </div>
+      ) : (
+        <div className={styles.wrapper_exit}>
+          <p className={styles.text_welcome}>
+            Hi, <NavLink to="profile">{user?.name}</NavLink>
+          </p>
+          <button className={styles.login} href="" onClick={() => exit()}>
+            выход
+          </button>
+        </div>
+      )}
     </div>
   );
 }
