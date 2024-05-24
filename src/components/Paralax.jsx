@@ -6,7 +6,7 @@ export default function Paralax({ ...props }) {
   const navigate = useNavigate();
 
   function goGallery(to) {
-    navigate(to);
+    navigate(`/MyGalary_react/${to}`);
   }
 
   return (

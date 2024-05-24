@@ -9,7 +9,7 @@ export default function About() {
         text_2={"ABOUT"}
         text_btn={"Gallery"}
         fone={"./paralax_1.jpg"}
-        to={"/gallery"}
+        to={"gallery"}
       />
       <div className={styles.wrapper_block}>
         <div className={styles.wrapper_photo}>

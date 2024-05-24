@@ -94,7 +94,7 @@ export default function Profile() {
         // text_2={"User Profile"}
         text_btn={"Go home"}
         fone={"./paralax_1.jpg"}
-        to={"/"}
+        to={""}
       >
         <div className={styles.userProfile}>
           <h2>Редактировать данные</h2>

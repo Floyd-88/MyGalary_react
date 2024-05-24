@@ -18,13 +18,13 @@ import ProtectedRoute from "./ProtectedRoute.jsx";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/MyGalary_react",
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
       {
         index: true,
-        path: "/",
+        path: "/MyGalary_react",
         element: <Home />,
       },
       {

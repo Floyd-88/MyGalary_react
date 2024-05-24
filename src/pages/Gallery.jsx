@@ -56,7 +56,6 @@ export default function Gallery() {
         }
 
         const data = await res.json();
-        console.log(data)
         if (data.items.length > 0) {
           setPage(data.meta);
           setCollections(data.items);
@@ -155,7 +154,7 @@ export default function Gallery() {
         text_2={"GALLERY"}
         text_btn={"Home"}
         fone={"./paralax_1.jpg"}
-        to={"/"}
+        to={""}
       />
       <div ref={containerRef}></div>
       <div className={styles.container}>

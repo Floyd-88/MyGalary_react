@@ -46,7 +46,7 @@ export default function App() {
       email: "",
       password: "",
     })
-    navigate("/");
+    navigate("/MyGalary_react/");
   }
 
 

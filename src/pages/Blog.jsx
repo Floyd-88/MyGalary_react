@@ -73,7 +73,7 @@ export default function Blog() {
         text_2={"BLOG"}
         text_btn={"Gallery"}
         fone={"./paralax_1.jpg"}
-        to={"/gallery"}
+        to={"gallery"}
       />
 
       <div className={styles.wrapper_card}>

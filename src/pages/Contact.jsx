@@ -60,7 +60,7 @@ export default function Contact() {
         text_2={"CONTACT"}
         text_btn={"Gallery"}
         fone={"./paralax_1.jpg"}
-        to={"/gallery"}
+        to={"gallery"}
       />
       <div className={styles.wrapper_forms}>
         <form onSubmit={handleSubmit}>

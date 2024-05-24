@@ -13,7 +13,7 @@ export default function Header({ setShowAuto, user, exit }) {
   return (
     <>
     <div className={`${styles.block_nav_items} ${styles.block_nav_items_upload}`}>
-    <NavLink to="/upload" className={styles.upload_mobile}>
+    <NavLink to="upload" className={styles.upload_mobile}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -40,10 +40,10 @@ export default function Header({ setShowAuto, user, exit }) {
       <div className={`${styles.header} ${menuOpen ? styles.open : ''}`}>
         {/* <h1 className={styles.title}>Photo gallery</h1> */}
         <ul className={styles.block_nav_items}>
-          <NavLink onClick={toggleMenu} to="/">HOME</NavLink>
-          <NavLink onClick={toggleMenu} to="/gallery">GALLERY</NavLink>
-          <NavLink onClick={toggleMenu} to="/services">SERVICES</NavLink>
-          <NavLink onClick={toggleMenu} to="/upload" className={styles.upload}>
+          <NavLink onClick={toggleMenu} to="/MyGalary_react/">HOME</NavLink>
+          <NavLink onClick={toggleMenu} to="gallery">GALLERY</NavLink>
+          <NavLink onClick={toggleMenu} to="services">SERVICES</NavLink>
+          <NavLink onClick={toggleMenu} to="upload" className={styles.upload}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -65,9 +65,9 @@ export default function Header({ setShowAuto, user, exit }) {
             </svg>
             <p>UPLOAD</p>
           </NavLink>
-          <NavLink onClick={toggleMenu} to="/blog">BLOG</NavLink>
-          <NavLink onClick={toggleMenu} to="/about">ABOUT</NavLink>
-          <NavLink onClick={toggleMenu} to="/contact">CONTACT</NavLink>
+          <NavLink onClick={toggleMenu} to="blog">BLOG</NavLink>
+          <NavLink onClick={toggleMenu} to="about">ABOUT</NavLink>
+          <NavLink onClick={toggleMenu} to="contact">CONTACT</NavLink>
         </ul>
         {!user.name ? (
           <div className={styles.wrapper_login}>

@@ -11,7 +11,7 @@ const navigate = useNavigate()
         text_2={"SERVICES"}
         text_btn={"Gallery"}
         fone={"./paralax_1.jpg"}
-        to={"/gallery"}
+        to={"gallery"}
       />
 
       <div className={styles.wrapper_cards}>
