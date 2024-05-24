@@ -22,3 +22,14 @@
   line-height: 1.75rem;
   font-weight: 600;
 }
+
+
+/* МЕДИА-ЗАПРОСЫ */
+
+/* Мобильные */
+@media (max-width: 600px) {
+  .wrapper_form {
+    width: 19rem;
+}
+
+}

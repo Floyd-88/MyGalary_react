@@ -56,8 +56,8 @@ export default function Gallery() {
         }
 
         const data = await res.json();
-
-        if (data.items) {
+        console.log(data)
+        if (data.items.length > 0) {
           setPage(data.meta);
           setCollections(data.items);
 

@@ -26,8 +26,7 @@
 .wrapper_btn_next_gal {
   display: flex;
   justify-content: center;
-
-}    
+}
 
 .btn_next_gal_shadow {
   margin-bottom: 40px;
@@ -45,9 +44,9 @@
 .btn_next_gal:disabled {
   transform: scale(1);
   background: rgb(143, 147, 145);
-  cursor:auto;
+  cursor: auto;
   color: rgb(197, 194, 194);
-  opacity: .7;
+  opacity: 0.7;
 }
 
 .header_btns_load_photo {
@@ -108,7 +107,7 @@
 .error_text {
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: #EF4444;
+  color: #ef4444;
   text-align: left;
   margin-top: 3px;
 }
@@ -118,8 +117,8 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  margin-bottom: .5rem;
-  margin-right: .5rem;
+  margin-bottom: 0.5rem;
+  margin-right: 0.5rem;
   overflow: hidden;
   flex-basis: 30%;
   max-height: 400px;
@@ -137,12 +136,12 @@
   right: 0;
   top: 0;
   font-weight: bold;
-  background: rgba(255, 255, 255, .5);
+  background: rgba(255, 255, 255, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: opacity .22s;
+  transition: opacity 0.22s;
 }
 
 .preview_image:hover .preview_remove {
@@ -160,17 +159,17 @@
   bottom: -30px;
   left: 0;
   height: 34px;
-  font-size: .8rem;
-  background: rgba(255, 255, 255, .5);
+  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.5);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 5px;
-  transition: bottom .22s;
+  transition: bottom 0.22s;
 }
 
 .preview_info_name {
-  width:  100%;
+  width: 100%;
   padding: 5px;
   display: flex;
   justify-content: space-between;
@@ -193,5 +192,49 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: width .22s;
+  transition: width 0.22s;
+}
+
+/* МЕДИА-ЗАПРОСЫ */
+
+@media (max-width: 600px) {
+  .wrapper_upload_photo {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .select_cat_photo_sel {
+    padding: 5px 0px;
+  }
+  .header_btns_load_photo {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .btn_load_photo button {
+    padding: 5px;
+    width: 100%;
+  }
+
+  .btn_next_gal {
+    /* margin-right: 20px; */
+    font-size: 16px;
+  }
+
+  .wrapper_preview_photos {
+    padding: 5px;
+  }
+
+  .preview_image {
+    flex-basis: 100%;
+  }
+
+  .block_text {
+    overflow-y: auto;
+    padding-top: 16px;
+}
+
+.text_1 {
+  margin-top: 18px;
+}
 }

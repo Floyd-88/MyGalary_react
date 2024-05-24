@@ -35,3 +35,42 @@
   opacity: .8;
 }
 
+@media (max-width: 600px) {
+  .wrapper_block {
+    flex-direction: column;
+    padding: 50px 20px;
+  }
+  
+  .wrapper_photo {
+    padding-right: 0;
+  }
+  
+  .title {
+    text-align: center;
+  }
+  
+  .wrapper_info {
+    width: auto;
+  }
+  
+  }
+
+@media (max-width: 768px) {
+.wrapper_block {
+  flex-direction: column;
+  padding: 50px 20px;
+}
+
+.wrapper_photo {
+  padding-right: 0;
+}
+
+.title {
+  text-align: center;
+}
+
+.wrapper_info {
+  width: auto;
+}
+
+}

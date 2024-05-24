@@ -2,7 +2,7 @@
   position: fixed;
   display: flex;
   width: 100%;
-  /* height: 100px; */
+  min-height: 130px;
   border: 1px solid black;
   background-color: black;
   z-index: 100;
@@ -107,3 +107,132 @@ scale: 1.1;
 .exit:hover {
   scale: 1.1;
   } */
+
+a:hover:after {
+  width: 100%;
+}
+
+.upload_mobile {
+  display: none;
+}
+
+.block_nav_items_upload {
+  padding: 0;
+}
+
+/* МЕДИА-ЗАПРОСЫ */
+
+@media (max-width: 1024px) {
+  .block_nav_items {
+    gap: 20px;
+    padding: 0px 5px;
+  }
+
+  .block_nav_items a {
+    font-size: 14px;
+  }
+
+  svg {
+    width: 50px;
+    height: 50px;
+  }
+
+  .login, .text_welcome a {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 0;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 50%;
+    background-color: black;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .header.open {
+    transform: translateX(0);
+  }
+
+  .block_nav_items {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .block_nav_items a {
+    font-size: 12px;
+  }
+
+  svg {
+    /* width: 50px;
+    height: 50px; */
+
+  }
+
+  .wrapper_login {
+    margin-right: 0;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .login, .text_welcome a {
+    font-size: 12px;
+  }
+
+  .wrapper_exit {
+    padding-right: 0;
+    gap: 5px;
+    text-align: center;
+    width: 100%;
+    margin-top: 25px;
+  }
+
+  .text_welcome {
+    font-size: 12px;
+  }
+  .upload {
+    display: none;
+  }
+
+  .block_nav_items_upload {
+    padding: 0;
+  }
+
+  .block_nav_items_upload a::after {
+    background-color: black;
+  }
+
+  .block_nav_items .upload_mobile {
+    position: absolute;
+    top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 23px;
+    color: black;
+    font-weight: 800;
+    z-index: 100;
+  }
+  .upload_svg {
+
+    width: 60px;
+    height: 60px;
+
+    filter: drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.57));
+    color: gold;
+    stroke-width: 2px;
+  }
+
+  .upload_mobile:hover:after {
+    width: 100%;
+    color: black;
+  }
+}

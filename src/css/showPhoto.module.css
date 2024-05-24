@@ -78,3 +78,17 @@
     max-width: 300px;
     text-align: center;
 }
+
+/* МЕДИА_ЗАПРОСЫ */
+
+/* мобильный экран  */
+@media (max-width: 600px) {
+  .wrapper_close {
+    width: 20px;
+    height: 20px;
+}
+.modal {
+  padding: 16px;
+  width: 100%;
+}
+}

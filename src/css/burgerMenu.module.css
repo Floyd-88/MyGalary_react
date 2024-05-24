@@ -1,0 +1,34 @@
+.burger {
+    display: none;
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 101;
+    cursor: pointer;
+  }
+  
+  .burger div {
+    width: 25px;
+    height: 3px;
+    background-color: #858282;
+    margin: 5px;
+    transition: 0.4s;
+  }
+  
+  .open .bar1 {
+    transform: rotate(-45deg) translate(-5px, 6px);
+  }
+  
+  .open .bar2 {
+    opacity: 0;
+  }
+  
+  .open .bar3 {
+    transform: rotate(45deg) translate(-5px, -6px);
+  }
+  
+  @media (max-width: 600px) {
+    .burger {
+      display: block;
+    }
+  }

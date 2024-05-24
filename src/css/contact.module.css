@@ -136,3 +136,16 @@ transform: scale(1);
   color: green;
   padding-bottom: 10px;
 }
+
+/* МЕДИА-ЗАПРОСЫ */
+
+/* Мобильные */
+@media (max-width: 600px) {
+  .wrapper_forms {
+    display: flex;
+    flex-direction: column;
+    padding: 50px 10px;
+    gap: 40px;
+}
+
+}
