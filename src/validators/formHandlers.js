@@ -11,12 +11,10 @@ export function handleInputChange(
   e,
   setFormData,
   setFormDataErrors,
-  setError,
   setSuccess
 ) {
   const { name, value } = e.target;
   const sanitizedValue = sanitizeInput(value);
-  setError(null);
   setSuccess("");
   setFormData((prevState) => ({
     ...prevState,

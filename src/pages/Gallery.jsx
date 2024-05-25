@@ -68,6 +68,9 @@ export default function Gallery() {
               });
             }, 100);
           }
+        } else {
+          setCollections(data.items);
+           setPage(data.meta);
         }
       } catch (error) {
         console.error("Ошибка при выполнении запроса:", error);

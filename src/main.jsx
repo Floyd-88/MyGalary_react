@@ -24,7 +24,6 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        path: "/MyGalary_react",
         element: <Home />,
       },
       {

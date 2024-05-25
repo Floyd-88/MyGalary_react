@@ -87,7 +87,7 @@ export default function Header({ setShowAuto, user, exit }) {
             <p className={styles.text_welcome}>
               Hi, <NavLink to="profile">{user?.name}</NavLink>
             </p>
-            <button className={styles.login} href="" onClick={() => {
+            <button className={styles.login} onClick={() => {
               exit()
               toggleMenu()
               }}>

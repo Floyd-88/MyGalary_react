@@ -44,12 +44,14 @@ export default function Contact() {
             if (data.errors) {
               console.log(data.errors.map((error) => error.message).join(", "));
             } else {
+              setSuccess("При отправке сообщения произошли проблемы");
               console.log("Oops! There was a problem submitting your form");
             }
           });
         }
       })
       .catch((error) => {
+        setSuccess("При отправке сообщения произошли проблемы");
         console.log("Oops! There was a problem submitting your form", error);
       });
   }
@@ -75,7 +77,7 @@ export default function Contact() {
                 placeholder="Ваше имя"
                 name="name"
                 value={formContact["name"]}
-                onChange={(e) => handleInputChange(e, setFormContact, setFormContactErrors)}
+                onChange={(e) => handleInputChange(e, setFormContact, setFormContactErrors, setSuccess)}
               />
               {formContactErrors["name"] && (
                 <p className={styles.error_text}>{formContactErrors["name"]}</p>
@@ -89,7 +91,7 @@ export default function Contact() {
                 placeholder="Ваша Фамилия"
                 name="lastName"
                 value={formContact["lastName"]}
-                onChange={(e) => handleInputChange(e, setFormContact, setFormContactErrors)}
+                onChange={(e) => handleInputChange(e, setFormContact, setFormContactErrors, setSuccess)}
               />
               {formContactErrors["lastName"] && (
                 <p className={styles.error_text}>
@@ -106,7 +108,7 @@ export default function Contact() {
               placeholder="Ваш адрес электронной почты"
               name="email"
               value={formContact["email"]}
-              onChange={(e) => handleInputChange(e, setFormContact, setFormContactErrors)}
+              onChange={(e) => handleInputChange(e, setFormContact, setFormContactErrors, setSuccess)}
             />
             {formContactErrors["email"] && (
               <p className={styles.error_text}>{formContactErrors["email"]}</p>
@@ -119,7 +121,7 @@ export default function Contact() {
               className={styles.form_text}
               placeholder="Текст сообщения"
               value={formContact["text"]}
-              onChange={(e) => handleInputChange(e, setFormContact, setFormContactErrors)}
+              onChange={(e) => handleInputChange(e, setFormContact, setFormContactErrors, setSuccess)}
             ></textarea>
             {formContactErrors["text"] && (
               <p className={styles.error_text}>{formContactErrors["text"]}</p>
